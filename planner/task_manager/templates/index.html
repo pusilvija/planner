@@ -1,0 +1,20 @@
+<h1> Task manager </h1>
+
+{% if tasks %}
+<h3>Task List</h3>
+<ul>
+    {% for task in tasks %}
+        <li>
+            <strong>{{ task.id }}. {{ task.name }}</strong>: {{ task.description|default:"No description" }} |
+            Status: {{ task.status.name }} |
+            Deadline: {{ task.deadline.due_date }} |
+            Category: {{ task.category.name|default:"No category" }} |
+        </li>
+    {% empty %}
+        <li>No tasks available.</li>
+    {% endfor %}
+
+</ul>
+{% else %}
+    There are no tasks.
+{% endif %}
