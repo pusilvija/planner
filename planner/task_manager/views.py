@@ -5,9 +5,6 @@ from .models import Status, Category, Task, Deadline
 # Example of an index view
 def index(request):
     context = {
-    #           'statuses': Status.objects.all(),
-               # 'categories': Category.objects.all(),
                'tasks': Task.objects.all(),
-               # 'deadlines': Deadline.objects.all(),
                }
     return render(request, 'index.html', context)
