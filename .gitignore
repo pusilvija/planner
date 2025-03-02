@@ -83,5 +83,4 @@ coverage.xml
 
 # Environments
 .env
-planner/.env
 venv/
