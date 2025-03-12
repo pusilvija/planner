@@ -126,15 +126,18 @@ document.addEventListener('DOMContentLoaded', () => {
             taskCategory.innerText = category;
             taskDeadline.innerText = deadline;
 
-
-
-            // Position the modal above the task
-            const taskRect = task.getBoundingClientRect();
+            // Position the modal at the center of the screen
+            const modalWidth = modal.offsetWidth;
             const modalHeight = modal.offsetHeight;
-            const modalTop = taskRect.top - modalHeight - 10; // 10px margin between task and modal
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            const modalTop = (windowHeight - modalHeight) / 2;
+            const modalLeft = (windowWidth - modalWidth) / 2;
 
             modal.style.top = `${modalTop}px`;
-            modal.style.left = `${taskRect.left}px`;
+            modal.style.left = `${modalLeft}px`;
+
             modal.style.display = 'flex';
         });
     });
