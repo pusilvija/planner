@@ -1,0 +1,115 @@
+        /* Title Styling */
+        .page-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3em;
+            font-weight: bold;
+            color: #3a3a3a;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+
+            position: absolute;
+            top: 20px; /* Adjust this value to move it higher/lower */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: url("../images/index-bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .task-container {
+            width: 500px;
+            height: 600px;
+            background-color: #e9f4f9;
+            opacity: 0.7;
+            border: 2px solid #e9ecf9;
+            border-radius: 8px;
+            padding: 10px;
+            position: relative;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        /* Task Styles */
+        .task {
+            width: 90%;
+            height: 80px; /* Slightly taller for better spacing */
+            border: 2px solid #e9ecf9;
+            border-radius: 12px; /* Softer corners */
+            padding: 15px;
+            cursor: pointer;
+            position: absolute;
+            left: 5%;
+            z-index: 1;
+            text-align: left; /* Align text to the left */
+            box-sizing: border-box;
+            transition: top 0.2s ease, transform 0.2s ease;
+            user-select: none;
+            background-color: #c4dce7;
+            display: flex;
+            align-items: center; /* Vertically center text */
+            font-size: 1.2em; /* Slightly larger text */
+            font-weight: bold; /* Make it stand out */
+            padding-left: 20px; /* Ensure text isn't too close to the border */
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        }
+
+        /* Add hover effect for better interaction */
+        .task:hover {
+            transform: scale(1.02); /* Subtle zoom effect */
+            background-color: #b0d3e3; /* Slightly darker shade on hover */
+        }
+
+        /* Modal Styles */
+        #task-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #e9f4f9;
+            border: 2px solid #e9ecf9;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.2s ease-in-out;
+            text-align: left;
+        }
+
+        #close-modal {
+            cursor: pointer;
+            font-size: 18px;
+            color: #353A62;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            font-weight: bold;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
