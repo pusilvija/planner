@@ -3,7 +3,7 @@ from django.db import models
 
 class Status(models.Model):
     # Define the 'id' field, which is automatically handled by Django as an auto-incrementing primary key.
-    name = models.CharField(max_length=100)  # 'name' field for the status name
+    name = models.CharField(max_length=100, unique=True)  # 'name' field for the status name
     description = models.TextField(blank=True, null=True)  # Optional 'description' field for additional details
 
     def __str__(self):
@@ -20,7 +20,7 @@ class Category(models.Model):
 
 class Deadline(models.Model):
     # task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='deadlines')  # foreign key to Task
-    due_date = models.DateTimeField()  # field for due date
+    due_date = models.DateTimeField(null=True, blank=True)  # field for due date
 
     def __str__(self):
         return f"Deadline on {self.due_date}"
