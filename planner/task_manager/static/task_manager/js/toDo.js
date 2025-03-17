@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Immediately Invoked Function Expression (IIFE) for better scoping
+(() => {
+    // === DOM Element Caching ===
     const tasks = Array.from(document.querySelectorAll('.task'));
     const taskContainer = document.getElementById('task-container');
     const modal = document.getElementById('task-modal');
@@ -9,21 +11,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskDeadline = document.getElementById('task-deadline');
     const taskCategory = document.getElementById('task-category');
 
+    // === Constants ===
     const taskHeight = tasks[0].offsetHeight;
     const spaceBetweenTasks = 20;
     const dragZoneHeight = taskHeight + spaceBetweenTasks;
 
+    // === State Variables ===
     let isDragging = false;
     let placeholderTop = null;
 
-    setInitialTaskSpacing();
-    tasks.forEach(task => {
-        initializeTaskDragging(task);
-        setupTaskClickHandler(task);
-    });
+    // === Initialization ===
+    function initialize() {
+        setInitialTaskSpacing();
+        tasks.forEach(task => {
+            initializeTaskDragging(task);
+            setupTaskClickHandler(task);
+        });
 
-    closeModal.addEventListener('click', () => modal.style.display = 'none');
+        if (closeModal) {
+            closeModal.addEventListener('click', closeTaskModal);
+        }
+    }
 
+    // === Modal Functions ===
+    function openTaskModal(task) {
+        const taskData = {
+            title: task.getAttribute("data-name"),
+            status: task.getAttribute("data-status"),
+            description: task.getAttribute("data-description"),
+            category: task.getAttribute("data-category"),
+            deadline: task.getAttribute("data-deadline"),
+        };
+        renderModal(taskData);
+    }
+
+    function renderModal(taskData) {
+        taskTitle.innerText = taskData.title;
+        taskStatus.innerText = taskData.status;
+        taskDescription.innerText = taskData.description;
+        taskCategory.innerText = taskData.category;
+        taskDeadline.innerText = taskData.deadline;
+
+        positionModalAtCenter(modal);
+        modal.style.display = 'flex';
+    }
+
+    function closeTaskModal() {
+        modal.style.display = 'none';
+    }
+
+    function positionModalAtCenter(modal) {
+        modal.style.top = `${(window.innerHeight - modal.offsetHeight) / 2}px`;
+        modal.style.left = `${(window.innerWidth - modal.offsetWidth) / 2}px`;
+    }
+
+    // === Task Manipulation Functions ===
     function setInitialTaskSpacing() {
         tasks.forEach((task, index) => {
             task.style.top = `${index * dragZoneHeight + spaceBetweenTasks}px`;
@@ -38,15 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         isDragging = true;
         let offsetY = e.clientY - task.offsetTop;
 
-        Object.assign(task.style, {
-            opacity: '0.3',
-            position: 'absolute',
-            zIndex: 10,
-            left: '5%'
-        });
+        // Add dragging class
+        task.classList.add('dragging');
 
+        // Create mousemove and mouseup event listeners for drag behavior
         function onMouseMove(e) {
-            updateDraggedTaskPosition(task, e, offsetY);
+            requestAnimationFrame(() => updateDraggedTaskPosition(task, e, offsetY));
         }
 
         function onMouseUp() {
@@ -81,9 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 
+        // Remove dragging class
+        task.classList.remove('dragging');
         task.style.top = `${placeholderTop}px`;
-        task.style.zIndex = 1;
-        task.style.opacity = '1';
         isDragging = false;
 
         const taskPositions = tasks.map(t => ({ task: t, top: t.offsetTop }))
@@ -106,19 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function openTaskModal(task) {
-        taskTitle.innerText = task.getAttribute("data-name");
-        taskStatus.innerText = task.getAttribute("data-status");
-        taskDescription.innerText = task.getAttribute("data-description");
-        taskCategory.innerText = task.getAttribute("data-category");
-        taskDeadline.innerText = task.getAttribute("data-deadline");
-
-        positionModalAtCenter(modal);
-        modal.style.display = 'flex';
-    }
-
-    function positionModalAtCenter(modal) {
-        modal.style.top = `${(window.innerHeight - modal.offsetHeight) / 2}px`;
-        modal.style.left = `${(window.innerWidth - modal.offsetWidth) / 2}px`;
-    }
-});
+    // === Initialize Application ===
+    document.addEventListener('DOMContentLoaded', () => {
+        initialize();
+    });
+})();
