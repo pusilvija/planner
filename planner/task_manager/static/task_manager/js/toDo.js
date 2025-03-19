@@ -97,7 +97,7 @@ class TaskManager {
     }
 
     renderModal(taskData) {
-        this.taskTitle.innerText = taskData.title;
+        this.taskTitle.innerText = taskData.name;
         this.taskStatus.innerText = taskData.status;
         this.taskDescription.innerText = taskData.description;
         this.taskCategory.innerText = taskData.category;

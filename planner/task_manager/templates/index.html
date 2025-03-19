@@ -14,7 +14,9 @@
     <h1 class="page-title">Planner</h1>
 
     <!-- Task container -->
+
     <div class="task-container" id="task-container">
+        <div class="add-task">+</div>
         {% for task in tasks %}
             <div class="task" id="task{{ task.id }}"
                  data-task="{{ task.id }}"
@@ -26,6 +28,7 @@
                  style="top: {{ forloop.counter0|add:"90" }}px;">
                 {{ task.name }}
             </div>
+
         {% endfor %}
     </div>
 
