@@ -60,19 +60,8 @@ def index(request):
             deadline=deadline
         )
 
-        # Return a JSON response (or redirect to another page, if desired)
-
         return redirect('index')
-    #     return JsonResponse({
-    #         'task_id': task.id,
-    #         'name': task.name,
-    #         'description': task.description,
-    #         'status': task.status.name,  # Convert ForeignKey to string
-    #         'category': task.category.name,  # Convert ForeignKey to string
-    #         'deadline': task.deadline.due_date.strftime('%Y-%m-%d') if task.deadline and task.deadline.due_date else None
-    #         # Format date properly
-    #     })
-    # # If not a POST request, just render the index page
+
     context = {
         'tasks': Task.objects.all(),
     }

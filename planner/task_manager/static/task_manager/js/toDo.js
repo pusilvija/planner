@@ -10,7 +10,7 @@ class TaskManager {
         this.taskDeadline = document.getElementById('task-deadline');
         this.taskCategory = document.getElementById('task-category');
 
-        this.taskHeight = this.tasks[0]?.offsetHeight || 50;
+        this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
         this.dragZoneHeight = this.taskHeight + this.spaceBetweenTasks;
 
