@@ -115,7 +115,7 @@
             transform: translate(-50%, -50%);
             background-color: #e9f4f9;
             border: 2px solid #e9ecf9;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             width: 350px;
             z-index: 1000;
@@ -124,6 +124,29 @@
             text-align: left;
             color: #003366;
         }
+
+        .save-task {
+            padding: 12px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #4c6a92;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            align-self: flex-end;  /* Align button to the bottom-right of modal */
+        }
+
+        .save-task:active {
+            transform: scale(0.98);
+        }
+
+        #task-details-table {
+            margin-bottom: 50px;
+        }
+
 
         #close-modal {
             cursor: pointer;

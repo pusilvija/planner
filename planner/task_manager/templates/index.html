@@ -35,7 +35,7 @@
     <div id="task-modal">
         <button id="close-modal">✖</button>
 
-        <table>
+        <table id="task-details-table">
             <tr>
                 <th>Task</th>
                 <td><textarea id="task-title"></textarea></td>
@@ -57,6 +57,8 @@
                 <td><textarea id="task-category"></textarea></td>
             </tr>
         </table>
+
+        <button class="save-task">Save</button>
     </div>
 <!--    <script type="module" src="{% static 'task_manager/js/main.js' %}"></script>-->
     <script src="{% static 'task_manager/js/toDo.js' %}"></script>
