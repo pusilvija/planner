@@ -1,152 +1,121 @@
-// Immediately Invoked Function Expression (IIFE) for better scoping
-(() => {
-    // === DOM Element Caching ===
-    const tasks = Array.from(document.querySelectorAll('.task'));
-    const taskContainer = document.getElementById('task-container');
-    const modal = document.getElementById('task-modal');
-    const closeModal = document.getElementById('close-modal');
-    const taskTitle = document.getElementById('task-title');
-    const taskStatus = document.getElementById('task-status');
-    const taskDescription = document.getElementById('task-description');
-    const taskDeadline = document.getElementById('task-deadline');
-    const taskCategory = document.getElementById('task-category');
+class TaskManager {
+    constructor() {
+        this.tasks = Array.from(document.querySelectorAll('.task'));
+        this.taskContainer = document.getElementById('task-container');
+        this.modal = document.getElementById('task-modal');
+        this.closeModal = document.getElementById('close-modal');
+        this.taskTitle = document.getElementById('task-title');
+        this.taskStatus = document.getElementById('task-status');
+        this.taskDescription = document.getElementById('task-description');
+        this.taskDeadline = document.getElementById('task-deadline');
+        this.taskCategory = document.getElementById('task-category');
 
-    // === Constants ===
-    const taskHeight = tasks[0].offsetHeight;
-    const spaceBetweenTasks = 20;
-    const dragZoneHeight = taskHeight + spaceBetweenTasks;
+        this.taskHeight = this.tasks[0]?.offsetHeight || 50;
+        this.spaceBetweenTasks = 20;
+        this.dragZoneHeight = this.taskHeight + this.spaceBetweenTasks;
 
-    // === State Variables ===
-    let isDragging = false;
-    let placeholderTop = null;
+        this.isDragging = false;
 
-    // === Initialization ===
-    function initialize() {
-        setInitialTaskSpacing();
-        tasks.forEach(task => {
-            initializeTaskDragging(task);
-            setupTaskClickHandler(task);
+        this.initialize();
+    }
+
+    initialize() {
+        this.setInitialTaskSpacing();
+        this.tasks.forEach(task => {
+            this.initializeTaskDragging(task);
+            this.setupTaskClickHandler(task);
         });
 
-        if (closeModal) {
-            closeModal.addEventListener('click', closeTaskModal);
+        if (this.closeModal) {
+            this.closeModal.addEventListener('click', () => this.closeTaskModal());
         }
     }
 
-    // === Modal Functions ===
-    function openTaskModal(task) {
-        const taskData = {
-            title: task.getAttribute("data-name"),
-            status: task.getAttribute("data-status"),
-            description: task.getAttribute("data-description"),
-            category: task.getAttribute("data-category"),
-            deadline: task.getAttribute("data-deadline"),
-        };
-        renderModal(taskData);
-    }
-
-    function renderModal(taskData) {
-        taskTitle.innerText = taskData.title;
-        taskStatus.innerText = taskData.status;
-        taskDescription.innerText = taskData.description;
-        taskCategory.innerText = taskData.category;
-        taskDeadline.innerText = taskData.deadline;
-
-        positionModalAtCenter(modal);
-        modal.style.display = 'flex';
-    }
-
-    function closeTaskModal() {
-        modal.style.display = 'none';
-    }
-
-    function positionModalAtCenter(modal) {
-        modal.style.top = `${(window.innerHeight - modal.offsetHeight) / 2}px`;
-        modal.style.left = `${(window.innerWidth - modal.offsetWidth) / 2}px`;
-    }
-
-    // === Task Manipulation Functions ===
-    function setInitialTaskSpacing() {
-        tasks.forEach((task, index) => {
-            task.style.top = `${index * dragZoneHeight + spaceBetweenTasks}px`;
+    setInitialTaskSpacing() {
+        this.tasks.forEach((task, index) => {
+            task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
         });
     }
 
-    function initializeTaskDragging(task) {
-        task.addEventListener('mousedown', (e) => startDragging(task, e));
+    initializeTaskDragging(task) {
+        task.addEventListener('mousedown', (e) => this.startDragging(task, e));
     }
 
-    function startDragging(task, e) {
-        isDragging = true;
+    startDragging(task, e) {
+        this.isDragging = true;
         let offsetY = e.clientY - task.offsetTop;
-
-        // Add dragging class
         task.classList.add('dragging');
 
-        // Create mousemove and mouseup event listeners for drag behavior
-        function onMouseMove(e) {
-            requestAnimationFrame(() => updateDraggedTaskPosition(task, e, offsetY));
-        }
+        const onMouseMove = (e) => {
+            requestAnimationFrame(() => this.updateDraggedTaskPosition(task, e, offsetY));
+        };
 
-        function onMouseUp() {
-            stopDragging(task, onMouseMove, onMouseUp);
-        }
+        const onMouseUp = () => {
+            this.stopDragging(task, onMouseMove, onMouseUp);
+        };
 
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
     }
 
-    function updateDraggedTaskPosition(task, e, offsetY) {
-        let newTop = Math.max(0, Math.min(e.clientY - offsetY, taskContainer.offsetHeight - taskHeight));
+    updateDraggedTaskPosition(task, e, offsetY) {
+        let newTop = Math.max(0, Math.min(e.clientY - offsetY, this.taskContainer.offsetHeight - task.offsetHeight));
         task.style.top = `${newTop}px`;
-
-        placeholderTop = newTop;
-
-        tasks.forEach(otherTask => {
-            if (otherTask !== task) {
-                let otherTaskTop = otherTask.offsetTop;
-                let otherTaskBottom = otherTaskTop + otherTask.offsetHeight;
-
-                if (newTop + taskHeight > otherTaskBottom) {
-                    placeholderTop = otherTaskBottom + spaceBetweenTasks / 2;
-                } else if (newTop < otherTaskTop) {
-                    placeholderTop = otherTaskTop - spaceBetweenTasks / 2;
-                }
-            }
-        });
     }
 
-    function stopDragging(task, onMouseMove, onMouseUp) {
+    stopDragging(task, onMouseMove, onMouseUp) {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
-
-        // Remove dragging class
         task.classList.remove('dragging');
-        task.style.top = `${placeholderTop}px`;
-        isDragging = false;
+        this.isDragging = false;
 
-        const taskPositions = tasks.map(t => ({ task: t, top: t.offsetTop }))
+        const taskPositions = this.tasks
+            .map(t => ({ task: t, top: t.offsetTop }))
             .sort((a, b) => a.top - b.top);
 
         taskPositions.forEach((item, index) => {
-            item.task.style.top = `${index * dragZoneHeight + spaceBetweenTasks}px`;
+            item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
         });
     }
 
-    function setupTaskClickHandler(task) {
+    setupTaskClickHandler(task) {
         let wasDragging = false;
 
         task.addEventListener('mousedown', () => wasDragging = false);
         task.addEventListener('mousemove', () => wasDragging = true);
-
         task.addEventListener('click', () => {
-            if (!wasDragging) openTaskModal(task);
+            if (!wasDragging) this.openTaskModal(task);
             wasDragging = false;
         });
     }
 
-    // === Initialize Application ===
-    document.addEventListener('DOMContentLoaded', () => {
-        initialize();
-    });
-})();
+    openTaskModal(task) {
+        const taskData = Object.fromEntries(
+            Object.keys(task.dataset).map(key => [key, task.dataset[key]])
+            );
+        this.renderModal(taskData);
+    }
+
+    renderModal(taskData) {
+        this.taskTitle.innerText = taskData.title;
+        this.taskStatus.innerText = taskData.status;
+        this.taskDescription.innerText = taskData.description;
+        this.taskCategory.innerText = taskData.category;
+        this.taskDeadline.innerText = taskData.deadline;
+
+        this.positionModalAtCenter();
+        this.modal.style.display = 'flex';
+    }
+
+    closeTaskModal() {
+        this.modal.style.display = 'none';
+    }
+
+    positionModalAtCenter() {
+        this.modal.style.top = `${(window.innerHeight - this.modal.offsetHeight) / 2}px`;
+        this.modal.style.left = `${(window.innerWidth - this.modal.offsetWidth) / 2}px`;
+    }
+}
+
+// Initialize the TaskManager on page load
+document.addEventListener('DOMContentLoaded', () => new TaskManager());
