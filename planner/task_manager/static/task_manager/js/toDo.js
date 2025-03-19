@@ -9,6 +9,7 @@ class TaskManager {
         this.taskDescription = document.getElementById('task-description');
         this.taskDeadline = document.getElementById('task-deadline');
         this.taskCategory = document.getElementById('task-category');
+        this.addTaskButton = document.querySelector('.add-task');
 
         this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
@@ -28,6 +29,10 @@ class TaskManager {
 
         if (this.closeModal) {
             this.closeModal.addEventListener('click', () => this.closeTaskModal());
+        }
+
+        if (this.addTaskButton) {
+            this.addTaskButton.addEventListener('click', () => this.openEmptyTaskModal());
         }
     }
 
@@ -94,6 +99,17 @@ class TaskManager {
             Object.keys(task.dataset).map(key => [key, task.dataset[key]])
             );
         this.renderModal(taskData);
+    }
+
+    openEmptyTaskModal() {
+        this.taskTitle.innerText = '';
+        this.taskStatus.innerText = '';
+        this.taskDescription.innerText = '';
+        this.taskCategory.innerText = '';
+        this.taskDeadline.innerText = '';
+
+        this.positionModalAtCenter();
+        this.modal.style.display = 'flex';
     }
 
     renderModal(taskData) {
