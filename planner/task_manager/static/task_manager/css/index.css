@@ -66,6 +66,14 @@
             box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
         }
 
+        /* Style for the dragging task */
+        .task.dragging {
+            opacity: 0.3;            /* Makes the task transparent */
+            position: absolute;      /* Position it absolutely while dragging */
+            z-index: 10;             /* Ensure it's always on top of other tasks */
+            left: 5%;                /* Optional: Keep it aligned with the left side during drag */
+        }
+
         /* Add hover effect for better interaction */
         .task:hover {
             transform: scale(1.02); /* Subtle zoom effect */
