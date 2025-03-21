@@ -7,9 +7,10 @@ class TaskManager {
         this.taskTitle = document.getElementById('task-title');
         this.taskStatus = document.getElementById('task-status');
         this.taskDescription = document.getElementById('task-description');
-        this.taskDeadline = document.getElementById('task-deadline');
+//        this.taskDeadline = document.getElementById('task-deadline');
         this.taskCategory = document.getElementById('task-category');
         this.addTaskButton = document.querySelector('.add-task');
+        this.saveTaskButton = document.getElementById('save-task')
 
         this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
@@ -32,8 +33,9 @@ class TaskManager {
         }
 
         if (this.addTaskButton) {
-            this.addTaskButton.addEventListener('click', () => this.openEmptyTaskModal());
+            this.addTaskButton.addEventListener('click', () => this.openAddTask());
         }
+
     }
 
     setInitialTaskSpacing() {
@@ -101,15 +103,16 @@ class TaskManager {
         this.renderModal(taskData);
     }
 
-    openEmptyTaskModal() {
-        this.taskTitle.innerText = '';
-        this.taskStatus.innerText = '';
-        this.taskDescription.innerText = '';
-        this.taskCategory.innerText = '';
-        this.taskDeadline.innerText = '';
-
-        this.positionModalAtCenter();
-        this.modal.style.display = 'flex';
+    openAddTask() {
+         window.location.href = "{% url'task_manager:add' %}"
+//        this.taskTitle.innerText = '';
+//        this.taskStatus.innerText = '';
+//        this.taskDescription.innerText = '';
+//        this.taskCategory.innerText = '';
+////        this.taskDeadline.innerText = '';
+//
+//        this.positionModalAtCenter();
+//        this.modal.style.display = 'flex';
     }
 
     renderModal(taskData) {
@@ -117,7 +120,7 @@ class TaskManager {
         this.taskStatus.innerText = taskData.status;
         this.taskDescription.innerText = taskData.description;
         this.taskCategory.innerText = taskData.category;
-        this.taskDeadline.innerText = taskData.deadline;
+//        this.taskDeadline.innerText = taskData.deadline;
 
         this.positionModalAtCenter();
         this.modal.style.display = 'flex';
@@ -130,6 +133,38 @@ class TaskManager {
     positionModalAtCenter() {
         this.modal.style.top = `${(window.innerHeight - this.modal.offsetHeight) / 2}px`;
         this.modal.style.left = `${(window.innerWidth - this.modal.offsetWidth) / 2}px`;
+    }
+
+    // Handle form submission and create a new task
+    handleFormSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this.taskForm);
+
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.closeTaskModal();
+
+                // Optionally, you could also add the new task to the task container dynamically
+                const newTaskElement = document.createElement('div');
+                newTaskElement.classList.add('task');
+                newTaskElement.innerText = data.task_name; // You can add more fields here
+                this.taskContainer.appendChild(newTaskElement);
+            } else {
+                alert('Error creating task!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 }
 

@@ -85,25 +85,26 @@
 
         /* Add task button */
         .add-task {
-            width: 50px;
-            height: 50px;
-            background-color: #c4dce7;
-            color: white;
-            font-size: 2em;
-            font-weight: bold;
-            text-align: center;
-            line-height: 50px;
-            position: absolute;
-            border-radius: 50%; /* Make it a circle */
-            cursor: pointer;
-            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            user-select: none;
+            text-decoration: none; /* Remove underline */
+            display: flex; /* Use flexbox to center content */
+            justify-content: center; /* Center text horizontally */
+            align-items: center; /* Center text vertically */
+            width: 50px; /* Set width to make it a circle */
+            height: 50px; /* Set height equal to width */
+            background-color: #b0d3e3; /* Light blue background */
+            color: white; /* White text color */
+            font-size: 24px; /* Increase font size */
+            border-radius: 50%; /* Fully round the button */
+            border: none; /* Remove any border */
+            cursor: pointer; /* Change cursor to pointer when hovering */
+            text-align: center; /* Center the text */
+            transition: transform 0.2s ease-in-out; /* Smooth hover effect */
         }
 
+        /* Hover effect */
         .add-task:hover {
             transform: scale(1.1); /* Slight zoom effect on hover */
-            background-color: #b0d3e3; /* Slightly darker shade on hover */
+            background-color: #96c1d4; /* Slightly darker shade on hover */
         }
 
         /* Modal Styles */
@@ -158,6 +159,35 @@
             border: none;
             background: none;
             font-weight: bold;
+        }
+
+        .add-task-form label {
+            color: #003366; /* Dark blue color to match the theme */
+            font-weight: bold;
+        }
+
+        .task-name {
+            flex-grow: 1; /* Push the delete button to the right */
+        }
+
+        .delete-task {
+            text-decoration: none;
+            font-size: 18px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #ff4d4d; /* Red color for delete button */
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .delete-task:hover {
+            transform: scale(1.1);
+        }
+
+        .delete-task img {
+            width: 24px; /* Adjust image size */
+            height: 24px;
+            transition: transform 0.2s ease-in-out;
         }
 
         /* Input Fields */
