@@ -1,0 +1,94 @@
+@import "base.css"; /* Import base styles for consistency */
+
+/* Add Task Form Styling */
+.add-task-form {
+    width: 600px;
+    max-width: 700px; /* Slightly wider for a more balanced look */
+    padding: 20px 100px;
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+    border-radius: 12px; /* Soft rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    backdrop-filter: blur(10px); /* Adding blur effect to the background */
+    border: 1px solid #e9ecf9;
+    margin-top: 20px;
+}
+
+/* Title Styling inside Form */
+.add-task-form h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5em;
+    text-align: center;
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+/* Label Styling */
+.add-task-form label {
+    color: #003366; /* Dark blue color */
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    display: block; /* Block display for better alignment */
+}
+
+/* Input Fields */
+.add-task-form input[type="text"],
+.add-task-form input[type="date"],
+.add-task-form textarea {
+    width: 100%; /* Full width for all input fields */
+    padding: 12px;
+    margin-bottom: 20px; /* Extra spacing for better form layout */
+    border: 1px solid #ccc; /* Light border for inputs */
+    border-radius: 8px; /* Rounded corners for inputs */
+    font-size: 1em;
+    background-color: #f5f9fc; /* Light blue background */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    color: #003366;
+}
+
+/* Input Field Focus Styling */
+.add-task-form input[type="text"]:focus,
+.add-task-form input[type="date"]:focus,
+.add-task-form textarea:focus {
+    border-color: #4c6a92; /* Highlight border with primary color */
+    box-shadow: 0px 0px 8px rgba(76, 106, 146, 0.5); /* Subtle glow effect */
+    outline: none; /* Remove default outline */
+}
+
+/* Textarea Styling */
+.add-task-form textarea {
+    resize: vertical; /* Allow resizing vertically */
+    min-height: 100px; /* Set minimum height */
+}
+
+/* Save Button */
+.save-task {
+    padding: 14px 24px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: #4c6a92;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    align-self: flex-end;
+    margin-top: 20px;
+}
+
+/* Save Button Hover and Active States */
+.save-task:hover {
+    background-color: #3b4a66; /* Slightly darker on hover */
+    transform: scale(1.05);
+}
+
+.save-task:active {
+    transform: scale(0.98); /* Slight scale down on click */
+}
+
+/* Button Focus Styling */
+.save-task:focus {
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(76, 106, 146, 0.5); /* Subtle glow on focus */
+}

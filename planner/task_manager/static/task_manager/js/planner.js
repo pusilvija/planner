@@ -10,7 +10,6 @@ class TaskManager {
 //        this.taskDeadline = document.getElementById('task-deadline');
         this.taskCategory = document.getElementById('task-category');
         this.addTaskButton = document.querySelector('.add-task');
-        this.saveTaskButton = document.getElementById('save-task')
 
         this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
@@ -28,12 +27,13 @@ class TaskManager {
             this.setupTaskClickHandler(task);
         });
 
-        if (this.closeModal) {
-            this.closeModal.addEventListener('click', () => this.closeTaskModal());
-        }
+//        if (this.closeModal) {
+//            this.closeModal.addEventListener('click', () => this.closeTaskModal());
+//        }
 
         if (this.addTaskButton) {
-            this.addTaskButton.addEventListener('click', () => this.openAddTask());
+            this.addTaskButton.addEventListener('click', () => {
+                window.location.href = "{% url 'task_manager:add' %}" });
         }
 
     }
@@ -90,50 +90,48 @@ class TaskManager {
 
         task.addEventListener('mousedown', () => wasDragging = false);
         task.addEventListener('mousemove', () => wasDragging = true);
+//        task.addEventListener('click', () => {
+//            if (!wasDragging) this.openTaskModal(task);
+//            wasDragging = false;
+//        });
+
+
         task.addEventListener('click', () => {
-            if (!wasDragging) this.openTaskModal(task);
+            if (!wasDragging) {
+                const taskId = task.dataset.task; // Fetch the task ID from the `data-task` attribute
+                window.location.href = `/task/${taskId}/`; // Redirect to the correct task detail URL
+            }
             wasDragging = false;
         });
+
     }
 
-    openTaskModal(task) {
-        const taskData = Object.fromEntries(
-            Object.keys(task.dataset).map(key => [key, task.dataset[key]])
-            );
-        this.renderModal(taskData);
-    }
+//    openTaskModal(task) {
+//        const taskData = Object.fromEntries(
+//            Object.keys(task.dataset).map(key => [key, task.dataset[key]])
+//            );
+//        this.renderModal(taskData);
+//    }
 
-    openAddTask() {
-         window.location.href = "{% url'task_manager:add' %}"
-//        this.taskTitle.innerText = '';
-//        this.taskStatus.innerText = '';
-//        this.taskDescription.innerText = '';
-//        this.taskCategory.innerText = '';
-////        this.taskDeadline.innerText = '';
+//    renderModal(taskData) {
+//        this.taskTitle.innerText = taskData.name;
+//        this.taskStatus.innerText = taskData.status;
+//        this.taskDescription.innerText = taskData.description;
+//        this.taskCategory.innerText = taskData.category;
+////        this.taskDeadline.innerText = taskData.deadline;
 //
 //        this.positionModalAtCenter();
 //        this.modal.style.display = 'flex';
-    }
+//    }
+//
+//    closeTaskModal() {
+//        this.modal.style.display = 'none';
+//    }
 
-    renderModal(taskData) {
-        this.taskTitle.innerText = taskData.name;
-        this.taskStatus.innerText = taskData.status;
-        this.taskDescription.innerText = taskData.description;
-        this.taskCategory.innerText = taskData.category;
-//        this.taskDeadline.innerText = taskData.deadline;
-
-        this.positionModalAtCenter();
-        this.modal.style.display = 'flex';
-    }
-
-    closeTaskModal() {
-        this.modal.style.display = 'none';
-    }
-
-    positionModalAtCenter() {
-        this.modal.style.top = `${(window.innerHeight - this.modal.offsetHeight) / 2}px`;
-        this.modal.style.left = `${(window.innerWidth - this.modal.offsetWidth) / 2}px`;
-    }
+//    positionModalAtCenter() {
+//        this.modal.style.top = `${(window.innerHeight - this.modal.offsetHeight) / 2}px`;
+//        this.modal.style.left = `${(window.innerWidth - this.modal.offsetWidth) / 2}px`;
+//    }
 
     // Handle form submission and create a new task
     handleFormSubmit(e) {

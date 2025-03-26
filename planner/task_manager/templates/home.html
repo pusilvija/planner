@@ -4,7 +4,7 @@
 <head>
     <link rel="icon" href="{% static 'task_manager/images/favicon.ico' %}" type="images/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'task_manager/css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'task_manager/css/home.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planner</title>
@@ -24,7 +24,6 @@
                  data-status="{{ task.status }}"
                  data-category="{{ task.category }}"
                  style="top: {{ forloop.counter0|add:"90" }}px;">
-<!--                {{ task.name }}-->
                  <span class="task-name">{{ task.name }}</span>
                     <!-- Buttons for Edit and Delete -->
                 <div class="task-buttons">
@@ -65,7 +64,7 @@
 
     </div>
 
-    <script src="{% static 'task_manager/js/toDo.js' %}"></script>
+    <script src="{% static 'task_manager/js/planner.js' %}"></script>
 
   </body>
 </html>

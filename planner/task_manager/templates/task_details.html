@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="{% static 'task_manager/images/favicon.ico' %}" type="images/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'task_manager/css/task_details.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">{{ task.name }}<</h1>
+
+        <!-- Task Table -->
+        <table class="task-details-table">
+            <tr>
+                <th>Status</th>
+                <td>{{ task.status }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ task.category }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ task.description|default:"No description available" }}</td>
+            </tr>
+        </table>
+        <button class="back-button" onclick="window.location.href='{% url 'home' %}'">Back to Tasks</button>
+    </div>
+</body>
+</html>
