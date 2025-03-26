@@ -1,68 +1,61 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+
+from .forms import TaskForm
 from .models import Task
-import json
-from datetime import datetime
-
-from .models import Task, Status, Category, Deadline
 
 
-def get_or_create_status(status_name):
-    # Retrieve or create a status object by name
-    status, created = Status.objects.get_or_create(name=status_name)
-    return status
-
-
-def get_or_create_category(category_name):
-    # Retrieve or create a category object by name
-    category, created = Category.objects.get_or_create(name=category_name)
-    return category
-
-
-def get_or_create_deadline(due_date):
-    if isinstance(due_date, str):  # Ensure due_date is a proper date object
-        try:
-            due_date = datetime.strptime(due_date, "%Y-%m-%d").date()
-        except ValueError:
-            return None  # Return None if the date format is invalid
-
-    deadline, created = Deadline.objects.get_or_create(due_date=due_date)
-    return deadline
-
-
-def index(request):
-    if request.method == "POST":
-        # data = json.loads(request.body)  # Ensure JSON data is correctly received
-        # print(">>>>>>>>>>>>>> Received Data:", data)  # Debugging line
-        # Collect task data from the request
-        name = request.POST.get("task_name")
-        description = request.POST.get("task_description", "")
-        status_inp = request.POST.get("task_status", "Not Started")
-        category_inp = request.POST.get("task_category", "General")
-        deadline_inp = request.POST.get("task_deadline")
-
-        # Use helper methods to get or create related objects
-        status = get_or_create_status(status_inp)
-        category = get_or_create_category(category_inp)
-        deadline = get_or_create_deadline(deadline_inp)
-
-        print("NAME:", name)
-        # Check if task_name is provided
-        if not name:
-            return JsonResponse({'error': 'Task name is required'}, status=400)
-
-        # Create a new Task object and save it to the database
-        task = Task.objects.create(
-            name=name,
-            description=description,
-            status=status,
-            category=category,
-            deadline=deadline
-        )
-
-        return redirect('index')
-
+def home(request):
     context = {
-        'tasks': Task.objects.all(),
-    }
-    return render(request, 'index.html', context)
+               'tasks': Task.objects.all(),
+               }
+    return render(request, 'home.html', context)
+
+
+def add_task(request):
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+
+        # Check if all fields are empty
+        if form.is_valid():
+            # Check if all the fields are empty (i.e., no data provided)
+            cleaned_data = form.cleaned_data
+            if all(not value for value in cleaned_data.values()):
+                return redirect('home')
+
+            # Save the form if any field is provided
+            form.save()
+            return redirect('home')  # Redirect to the home page after saving the task
+
+    else:
+        form = TaskForm()  # If it's a GET request, create an empty form
+
+    return render(request, 'add_task.html', {'form': form})
+
+
+def delete_task(request, task_id):
+    task = Task.objects.get(pk=task_id)
+    task.delete()
+    # messages.success(request, 'Recipe deleted successfully.')
+    return redirect('home')
+
+
+def task_details(request, task_id):
+    task = Task.objects.get(pk=task_id)  # Fetch the task by ID
+    context = {'task': task}
+    return render(request, 'task_details.html', context)
+
+
+def update_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+
+    if request.method == "POST":
+        # Directly update the task using the form
+        task.name = request.POST.get('name')
+        task.status = request.POST.get('status')
+        task.category = request.POST.get('category')
+        task.description = request.POST.get('description')
+        task.save()  # Save the updated task to the database
+        return redirect('task_details', task_id=task.id)  # Redirect to task details page after update
+
+    context = {'task': task}
+    return render(request, 'task_details.html', context)

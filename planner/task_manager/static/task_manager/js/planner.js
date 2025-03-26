@@ -7,8 +7,8 @@ class TaskManager {
         this.taskTitle = document.getElementById('task-title');
         this.taskStatus = document.getElementById('task-status');
         this.taskDescription = document.getElementById('task-description');
-        this.taskDeadline = document.getElementById('task-deadline');
         this.taskCategory = document.getElementById('task-category');
+        this.addTaskButton = document.querySelector('.add-task');
 
         this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
@@ -26,9 +26,11 @@ class TaskManager {
             this.setupTaskClickHandler(task);
         });
 
-        if (this.closeModal) {
-            this.closeModal.addEventListener('click', () => this.closeTaskModal());
+        if (this.addTaskButton) {
+            this.addTaskButton.addEventListener('click', () => {
+                window.location.href = "{% url 'task_manager:add' %}" });
         }
+
     }
 
     setInitialTaskSpacing() {
@@ -83,37 +85,47 @@ class TaskManager {
 
         task.addEventListener('mousedown', () => wasDragging = false);
         task.addEventListener('mousemove', () => wasDragging = true);
+
         task.addEventListener('click', () => {
-            if (!wasDragging) this.openTaskModal(task);
+            if (!wasDragging) {
+                const taskId = task.dataset.task; // Fetch the task ID from the `data-task` attribute
+                window.location.href = `/task/${taskId}/`; // Redirect to the correct task detail URL
+            }
             wasDragging = false;
         });
+
     }
 
-    openTaskModal(task) {
-        const taskData = Object.fromEntries(
-            Object.keys(task.dataset).map(key => [key, task.dataset[key]])
-            );
-        this.renderModal(taskData);
-    }
+    // Handle form submission and create a new task
+    handleFormSubmit(e) {
+        e.preventDefault();
 
-    renderModal(taskData) {
-        this.taskTitle.innerText = taskData.title;
-        this.taskStatus.innerText = taskData.status;
-        this.taskDescription.innerText = taskData.description;
-        this.taskCategory.innerText = taskData.category;
-        this.taskDeadline.innerText = taskData.deadline;
+        const formData = new FormData(this.taskForm);
 
-        this.positionModalAtCenter();
-        this.modal.style.display = 'flex';
-    }
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.closeTaskModal();
 
-    closeTaskModal() {
-        this.modal.style.display = 'none';
-    }
-
-    positionModalAtCenter() {
-        this.modal.style.top = `${(window.innerHeight - this.modal.offsetHeight) / 2}px`;
-        this.modal.style.left = `${(window.innerWidth - this.modal.offsetWidth) / 2}px`;
+                // Optionally, you could also add the new task to the task container dynamically
+                const newTaskElement = document.createElement('div');
+                newTaskElement.classList.add('task');
+                newTaskElement.innerText = data.task_name; // You can add more fields here
+                this.taskContainer.appendChild(newTaskElement);
+            } else {
+                alert('Error creating task!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 }
 

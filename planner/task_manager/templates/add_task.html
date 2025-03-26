@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="{% static 'task_manager/images/favicon.ico' %}" type="images/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'task_manager/css/add_task.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add</title>
+
+</head>
+<body>
+<h2 class="page-title">Add Task</h2>
+  <form method="POST" class="add-task-form">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="save-task">Add</button>
+  </form>
+</body>
+</html>
