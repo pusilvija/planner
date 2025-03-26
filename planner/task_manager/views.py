@@ -19,8 +19,8 @@ def add_task(request):
         if form.is_valid():
             # Check if all the fields are empty (i.e., no data provided)
             cleaned_data = form.cleaned_data
-            if not cleaned_data['name'] and not cleaned_data['status'] and not cleaned_data['category'] and not cleaned_data['description']:
-                return redirect('home')  # Redirect to the home page if all fields are empty
+            if all(not value for value in cleaned_data.values()):
+                return redirect('home')
 
             # Save the form if any field is provided
             form.save()
