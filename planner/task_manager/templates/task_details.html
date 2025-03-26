@@ -32,7 +32,13 @@
 
             <div class="button-container">
                 <button type="submit" class="button update-task-button">Update Task</button>
-                <a href="{% url 'home' %}" class="button back-button">Back to Tasks</a>
+                <a href="{% url 'delete_task' task.id %}"
+                   class="button delete-task"
+                   onclick="return confirm('Are you sure you want to delete this task?')">
+                    Delete</a>
+                <a href="{% url 'home' %}"
+                   class="button back-button">
+                    Back to Tasks</a>
             </div>
         </form>
     </div>
