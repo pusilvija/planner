@@ -2,8 +2,6 @@ class TaskManager {
     constructor() {
         this.tasks = Array.from(document.querySelectorAll('.task'));
         this.taskContainer = document.getElementById('task-container');
-        this.modal = document.getElementById('task-modal');
-        this.closeModal = document.getElementById('close-modal');
         this.taskTitle = document.getElementById('task-title');
         this.taskStatus = document.getElementById('task-status');
         this.taskDescription = document.getElementById('task-description');
@@ -96,37 +94,6 @@ class TaskManager {
 
     }
 
-    // Handle form submission and create a new task
-    handleFormSubmit(e) {
-        e.preventDefault();
-
-        const formData = new FormData(this.taskForm);
-
-        fetch(window.location.href, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                this.closeTaskModal();
-
-                // Optionally, you could also add the new task to the task container dynamically
-                const newTaskElement = document.createElement('div');
-                newTaskElement.classList.add('task');
-                newTaskElement.innerText = data.task_name; // You can add more fields here
-                this.taskContainer.appendChild(newTaskElement);
-            } else {
-                alert('Error creating task!');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
 }
 
 // Initialize the TaskManager on page load
