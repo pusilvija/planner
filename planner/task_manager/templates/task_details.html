@@ -11,23 +11,33 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="page-title">{{ task.name }}<</h1>
+        <h1 class="page-title">{{ task.name }}</h1>
 
-        <!-- Task Table -->
-        <table class="task-details-table">
-            <tr>
-                <th>Status</th>
-                <td>{{ task.status }}</td>
-            </tr>
-            <tr>
-                <th>Category</th>
-                <td>{{ task.category }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ task.description|default:"No description available" }}</td>
-            </tr>
-        </table>
+        <!-- Editable Task Table -->
+        <form method="POST" action="{% url 'update_task' task.id %}">
+            {% csrf_token %}
+            <table class="task-details-table">
+                <tr>
+                    <th>Task Name</th>
+                    <td><input type="text" name="name" value="{{ task.name }}" required></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td><input type="text" name="status" value="{{ task.status }}" required></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td><input type="text" name="category" value="{{ task.category }}"></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><textarea name="description">{{ task.description }}</textarea></td>
+                </tr>
+            </table>
+            <button type="submit" class="back-button">Update Task</button>
+        </form>
+
+        <!-- Back Button -->
         <button class="back-button" onclick="window.location.href='{% url 'home' %}'">Back to Tasks</button>
     </div>
 </body>
