@@ -7,7 +7,6 @@ class TaskManager {
         this.taskTitle = document.getElementById('task-title');
         this.taskStatus = document.getElementById('task-status');
         this.taskDescription = document.getElementById('task-description');
-//        this.taskDeadline = document.getElementById('task-deadline');
         this.taskCategory = document.getElementById('task-category');
         this.addTaskButton = document.querySelector('.add-task');
 
@@ -26,10 +25,6 @@ class TaskManager {
             this.initializeTaskDragging(task);
             this.setupTaskClickHandler(task);
         });
-
-//        if (this.closeModal) {
-//            this.closeModal.addEventListener('click', () => this.closeTaskModal());
-//        }
 
         if (this.addTaskButton) {
             this.addTaskButton.addEventListener('click', () => {
@@ -90,11 +85,6 @@ class TaskManager {
 
         task.addEventListener('mousedown', () => wasDragging = false);
         task.addEventListener('mousemove', () => wasDragging = true);
-//        task.addEventListener('click', () => {
-//            if (!wasDragging) this.openTaskModal(task);
-//            wasDragging = false;
-//        });
-
 
         task.addEventListener('click', () => {
             if (!wasDragging) {
@@ -105,33 +95,6 @@ class TaskManager {
         });
 
     }
-
-//    openTaskModal(task) {
-//        const taskData = Object.fromEntries(
-//            Object.keys(task.dataset).map(key => [key, task.dataset[key]])
-//            );
-//        this.renderModal(taskData);
-//    }
-
-//    renderModal(taskData) {
-//        this.taskTitle.innerText = taskData.name;
-//        this.taskStatus.innerText = taskData.status;
-//        this.taskDescription.innerText = taskData.description;
-//        this.taskCategory.innerText = taskData.category;
-////        this.taskDeadline.innerText = taskData.deadline;
-//
-//        this.positionModalAtCenter();
-//        this.modal.style.display = 'flex';
-//    }
-//
-//    closeTaskModal() {
-//        this.modal.style.display = 'none';
-//    }
-
-//    positionModalAtCenter() {
-//        this.modal.style.top = `${(window.innerHeight - this.modal.offsetHeight) / 2}px`;
-//        this.modal.style.left = `${(window.innerWidth - this.modal.offsetWidth) / 2}px`;
-//    }
 
     // Handle form submission and create a new task
     handleFormSubmit(e) {
