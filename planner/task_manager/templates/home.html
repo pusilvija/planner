@@ -39,31 +39,6 @@
         {% endfor %}
     </div>
 
-    <!-- Modal to show task details -->
-    <div id="task-modal">
-        <button id="close-modal">✖</button>
-
-            <table id="task-details-table">
-                <tr>
-                    <th>Name</th>
-                    <td><textarea id="task-title" name="task_name"></textarea></td>
-                </tr>
-                <tr>
-                    <th>Status</th>
-                    <td><textarea id="task-status" name="task_status"></textarea></td>
-                </tr>
-                <tr>
-                    <th>Description</th>
-                    <td><textarea id="task-description" name="task_description"></textarea></td>
-                </tr>
-                <tr>
-                    <th>Category</th>
-                    <td><textarea id="task-category" name="task_category"></textarea></td>
-                </tr>
-            </table>
-
-    </div>
-
     <script src="{% static 'task_manager/js/planner.js' %}"></script>
 
   </body>
