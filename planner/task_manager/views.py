@@ -14,23 +14,22 @@ def home(request):
 def add_task(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
+
+        # Check if all fields are empty
         if form.is_valid():
-            # Save the new task to the database
+            # Check if all the fields are empty (i.e., no data provided)
+            cleaned_data = form.cleaned_data
+            if not cleaned_data['name'] and not cleaned_data['status'] and not cleaned_data['category'] and not cleaned_data['description']:
+                return redirect('home')  # Redirect to the home page if all fields are empty
+
+            # Save the form if any field is provided
             form.save()
-            # Redirect to the same page (or another URL like a task list or detail page)
-            return redirect('home')  # or redirect to a different view like 'task_list'
+            return redirect('home')  # Redirect to the home page after saving the task
+
     else:
-        form = TaskForm()
+        form = TaskForm()  # If it's a GET request, create an empty form
 
-    # Fetch all tasks to show on the page
-    tasks = Task.objects.all()
-
-    # Pass the form and tasks to the template
-    context = {
-        'form': form,
-        'tasks': tasks
-    }
-    return render(request, 'add_task.html', context)
+    return render(request, 'add_task.html', {'form': form})
 
 
 def delete_task(request, task_id):

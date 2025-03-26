@@ -33,7 +33,6 @@
 
 /* Input Fields */
 .add-task-form input[type="text"],
-.add-task-form input[type="date"],
 .add-task-form textarea {
     width: 100%; /* Full width for all input fields */
     padding: 12px;
@@ -48,7 +47,6 @@
 
 /* Input Field Focus Styling */
 .add-task-form input[type="text"]:focus,
-.add-task-form input[type="date"]:focus,
 .add-task-form textarea:focus {
     border-color: #4c6a92; /* Highlight border with primary color */
     box-shadow: 0px 0px 8px rgba(76, 106, 146, 0.5); /* Subtle glow effect */

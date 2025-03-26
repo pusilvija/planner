@@ -11,19 +11,14 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="page-title">{{ task.name }}</h1>
-
         <!-- Editable Task Table -->
-        <form method="POST" action="{% url 'update_task' task.id %}">
+        <form method="POST" action="{% url 'update_task' task.id %}" autocomplete="off">
             {% csrf_token %}
+            <input class="page-title" type="text" name="name" value="{{ task.name }}" placeholder="Enter task name">
             <table class="task-details-table">
                 <tr>
-                    <th>Task Name</th>
-                    <td><input type="text" name="name" value="{{ task.name }}" required></td>
-                </tr>
-                <tr>
                     <th>Status</th>
-                    <td><input type="text" name="status" value="{{ task.status }}" required></td>
+                    <td><input type="text" name="status" value="{{ task.status }}"></td>
                 </tr>
                 <tr>
                     <th>Category</th>
@@ -34,11 +29,12 @@
                     <td><textarea name="description">{{ task.description }}</textarea></td>
                 </tr>
             </table>
-            <button type="submit" class="back-button">Update Task</button>
-        </form>
 
-        <!-- Back Button -->
-        <button class="back-button" onclick="window.location.href='{% url 'home' %}'">Back to Tasks</button>
+            <div class="button-container">
+                <button type="submit" class="button update-task-button">Update Task</button>
+                <a href="{% url 'home' %}" class="button back-button">Back to Tasks</a>
+            </div>
+        </form>
     </div>
 </body>
 </html>

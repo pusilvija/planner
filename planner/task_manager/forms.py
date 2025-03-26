@@ -5,4 +5,10 @@ from .models import Task
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description', 'status', 'category']
+        fields = ['name', 'status', 'category', 'description']
+
+    # Ensure the fields are not required
+    name = forms.CharField(required=False)
+    status = forms.CharField(required=False)
+    category = forms.CharField(required=False)
+    description = forms.CharField(required=False, widget=forms.Textarea)
