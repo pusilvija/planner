@@ -35,6 +35,14 @@ class TaskManager {
         this.tasks.forEach((task, index) => {
             task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
         });
+
+        // Adjust the container's height dynamically, but do NOT change its top position
+        let totalHeight = this.tasks.length * (this.taskHeight + this.spaceBetweenTasks) + this.taskHeight;
+
+        this.taskContainer.style.height = `${totalHeight}px`; // Allows natural expansion
+
+        // Ensure the page itself grows so it can scroll properly
+        document.body.style.minHeight = `${totalHeight + 500}px`; // Adjust for extra spacing
     }
 
     initializeTaskDragging(task) {
