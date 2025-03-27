@@ -1,12 +1,15 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import TaskForm
 from .models import Task
+import json
+from django.views.decorators.http import require_POST
 
 
 def home(request):
     context = {
-               'tasks': Task.objects.all(),
+               'tasks': Task.objects.all().order_by('order'),
                }
     return render(request, 'home.html', context)
 
@@ -59,3 +62,50 @@ def update_task(request, task_id):
 
     context = {'task': task}
     return render(request, 'task_details.html', context)
+
+
+@require_POST  # Ensure only POST requests are accepted
+def update_task_order(request, task_id):
+    try:
+        # Parse the incoming JSON data from the request body
+        data = json.loads(request.body.decode('utf-8'))
+
+        # Extract the new order from the JSON data
+        new_order = data.get('new_order')
+
+        if new_order is None:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'No new order provided'
+            }, status=400)
+
+        # Fetch the task by its ID
+        task = Task.objects.get(id=task_id)
+
+        # Update the order (assuming there's an order field in the Task model)
+        task.order = new_order
+        task.save()
+
+        # Return a JSON response indicating success
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Order updated successfully'
+        })
+
+    except Task.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Task not found'
+        }, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid JSON data'
+        }, status=400)
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)

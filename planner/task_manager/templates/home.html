@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'task_manager/css/home.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Planner</title>
 
 </head>
@@ -15,14 +16,15 @@
 
         <!-- Task container -->
     <div class="task-container" id="task-container">
-        <a href="add/" class="add-task">+</a>
+        <a href="add/" id="add-task">+</a>
         {% for task in tasks %}
-            <div class="task" id="task{{ task.id }}"
-                 data-task="{{ task.id }}"
+            <div class="task" id="{{ task.id }}"
+                 data-id="{{ task.id }}"
                  data-name="{{ task.name }}"
                  data-description="{{ task.description|default:'No description' }}"
                  data-status="{{ task.status }}"
                  data-category="{{ task.category }}"
+                 data-order=" {{ task.order }} "
                  style="top: {{ forloop.counter0|add:"90" }}px;">
                  <span class="task-name">{{ task.name }}</span>
                     <!-- Buttons for Edit and Delete -->
