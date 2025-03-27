@@ -14,7 +14,13 @@
 <h2 class="page-title">Add Task</h2>
   <form method="POST" class="add-task-form">
     {% csrf_token %} {{ form.as_p }}
-    <button type="submit" class="save-task">Add</button>
+    <div class="button-container">
+        <button type="submit" class="button save-task">Add</button>
+        <a href="{% url 'home' %}"
+           class="button back-button">
+            Back to Tasks</a>
+    </div>
+
   </form>
 </body>
 </html>

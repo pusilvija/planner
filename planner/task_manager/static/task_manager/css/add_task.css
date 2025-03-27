@@ -59,34 +59,38 @@
     min-height: 100px; /* Set minimum height */
 }
 
-/* Save Button */
-.save-task {
+
+/* General Button Styling */
+.button {
     padding: 14px 24px;
     font-size: 1.2em;
     font-weight: bold;
     color: white;
-    background-color: #4c6a92;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    align-self: flex-end;
     margin-top: 20px;
+    display: inline-block;
+    background-color: #4c6a92;
 }
 
-/* Save Button Hover and Active States */
-.save-task:hover {
+a.button {
+    text-decoration: none; /* Remove underline */
+}
+
+.button:hover {
     background-color: #3b4a66; /* Slightly darker on hover */
     transform: scale(1.05);
 }
 
-.save-task:active {
+.button:active {
     transform: scale(0.98); /* Slight scale down on click */
 }
 
-/* Button Focus Styling */
-.save-task:focus {
-    outline: none;
-    box-shadow: 0px 0px 8px rgba(76, 106, 146, 0.5); /* Subtle glow on focus */
+.button-container {
+    display: flex;
+    justify-content: space-between;  /* Align buttons at the opposite ends */
+    width: 100%;  /* Make sure the container takes full width */
 }
