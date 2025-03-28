@@ -28,8 +28,6 @@ class TaskManager {
             this.addTaskButton.addEventListener('click', () => {
                 window.location.href = "{% url 'task_manager:add' %}" });
         }
-
-        this.reorderTasks()
     }
 
     setInitialTaskSpacing() {
@@ -86,7 +84,7 @@ class TaskManager {
                 .sort((a, b) => a.top - b.top);
         taskPositions.forEach((item, index) => {
             item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
-            this.updateTaskOrder(item.task.id, index+1);
+            this.updateTaskOrder(item.task.id, index);
         });
     }
 

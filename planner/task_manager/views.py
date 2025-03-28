@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import F
 
 from .forms import TaskForm
 from .models import Task
@@ -18,15 +19,20 @@ def add_task(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
 
-        # Check if all fields are empty
         if form.is_valid():
             # Check if all the fields are empty (i.e., no data provided)
             cleaned_data = form.cleaned_data
             if all(not value for value in cleaned_data.values()):
                 return redirect('home')
 
-            # Save the form if any field is provided
-            form.save()
+            # Shift all existing tasks' order up by 1
+            Task.objects.update(order=F('order') + 1)
+
+            # Create the new task with order = 0
+            new_task = form.save(commit=False)
+            new_task.order = 0
+            new_task.save()
+
             return redirect('home')  # Redirect to the home page after saving the task
 
     else:
@@ -36,9 +42,17 @@ def add_task(request):
 
 
 def delete_task(request, task_id):
-    task = Task.objects.get(pk=task_id)
-    task.delete()
-    # messages.success(request, 'Recipe deleted successfully.')
+    task = Task.objects.get(pk=task_id)  # Fetch the task to be deleted
+    task_order = task.order  # Save the order of the task being deleted
+    task.delete()  # Delete the task
+
+    # Reorder the remaining tasks by shifting their order down by 1
+    tasks_to_update = Task.objects.filter(order__gt=task_order).order_by('order')
+
+    for task in tasks_to_update:
+        task.order -= 1
+        task.save()
+
     return redirect('home')
 
 

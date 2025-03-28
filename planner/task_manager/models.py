@@ -6,7 +6,7 @@ class Task(models.Model):
     status = models.CharField(max_length=50, default='to do')
     description = models.TextField()
     category = models.CharField(max_length=50)
-    order = models.PositiveIntegerField(default=0)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
