@@ -32,16 +32,6 @@ class TaskManager {
         this.reorderTasks()
     }
 
-    reorderTasks(){
-        const taskPositions = this.tasks
-                .map(t => ({ task: t, top: t.offsetTop }))
-                .sort((a, b) => a.top - b.top);
-        taskPositions.forEach((item, index) => {
-//            item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
-            this.updateTaskOrder(item.task.id, index+1);
-        });
-    }
-
     setInitialTaskSpacing() {
         this.tasks.forEach((task, index) => {
             task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
@@ -87,11 +77,13 @@ class TaskManager {
         document.removeEventListener('mouseup', onMouseUp);
         task.classList.remove('dragging');
         this.isDragging = false;
+        this.reorderTasks()
+    }
 
-
+    reorderTasks() {
         const taskPositions = this.tasks
-            .map(t => ({ task: t, top: t.offsetTop }))
-            .sort((a, b) => a.top - b.top);
+                .map(t => ({ task: t, top: t.offsetTop }))
+                .sort((a, b) => a.top - b.top);
         taskPositions.forEach((item, index) => {
             item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
             this.updateTaskOrder(item.task.id, index+1);
