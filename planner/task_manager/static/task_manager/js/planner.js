@@ -6,7 +6,7 @@ class TaskManager {
         this.taskStatus = document.getElementById('task-status');
         this.taskDescription = document.getElementById('task-description');
         this.taskCategory = document.getElementById('task-category');
-        this.addTaskButton = document.querySelector('.add-task');
+        this.addTaskButton = document.getElementById('add-task');
 
         this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
@@ -28,7 +28,6 @@ class TaskManager {
             this.addTaskButton.addEventListener('click', () => {
                 window.location.href = "{% url 'task_manager:add' %}" });
         }
-
     }
 
     setInitialTaskSpacing() {
@@ -76,13 +75,46 @@ class TaskManager {
         document.removeEventListener('mouseup', onMouseUp);
         task.classList.remove('dragging');
         this.isDragging = false;
+        this.reorderTasks()
+    }
 
+    reorderTasks() {
         const taskPositions = this.tasks
-            .map(t => ({ task: t, top: t.offsetTop }))
-            .sort((a, b) => a.top - b.top);
-
+                .map(t => ({ task: t, top: t.offsetTop }))
+                .sort((a, b) => a.top - b.top);
         taskPositions.forEach((item, index) => {
             item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
+            this.updateTaskOrder(item.task.id, index);
+        });
+    }
+
+    updateTaskOrder(taskId, newOrder) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;  // Get the CSRF token
+
+        // Create the URL for the request dynamically using the taskId
+        const url = `/update-task-order/${taskId}/`;
+
+        // Send the POST request to the URL
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,  // Add CSRF token to headers
+            },
+            body: JSON.stringify({
+                new_order: newOrder  // Send the new order value to the server
+            })
+        })
+        .then(response => response.json())  // Parse the response as JSON
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('Order updated successfully');
+            } else {
+                console.error('Error:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     }
 
@@ -94,7 +126,7 @@ class TaskManager {
 
         task.addEventListener('click', () => {
             if (!wasDragging) {
-                const taskId = task.dataset.task; // Fetch the task ID from the `data-task` attribute
+                const taskId = task.id; // Fetch the task ID
                 window.location.href = `/task/${taskId}/`; // Redirect to the correct task detail URL
             }
             wasDragging = false;

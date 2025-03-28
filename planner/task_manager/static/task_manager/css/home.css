@@ -62,7 +62,7 @@
 }
 
 /* Add task button */
-.add-task {
+#add-task {
     text-decoration: none; /* Remove underline */
     display: flex; /* Use flexbox to center content */
     justify-content: center; /* Center text horizontally */
@@ -80,7 +80,7 @@
 }
 
 /* Hover effect */
-.add-task:hover {
+#add-task:hover {
     transform: scale(1.1); /* Slight zoom effect on hover */
     background-color: #96c1d4; /* Slightly darker shade on hover */
 }
