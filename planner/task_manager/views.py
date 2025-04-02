@@ -56,6 +56,19 @@ def delete_task(request, task_id):
     return redirect('home')
 
 
+def edit_task_name(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)  # Get the task by its ID
+
+    if request.method == "POST":
+        new_name = request.POST.get('task_name')  # Get the new task name from the POST request
+        task.name = new_name  # Update the task name
+        task.save()  # Save the task with the new name
+        return JsonResponse({'status': 'success', 'new_name': task.name})
+
+    return redirect('home')
+
+
+
 def task_details(request, task_id):
     task = Task.objects.get(pk=task_id)  # Fetch the task by ID
     context = {'task': task}

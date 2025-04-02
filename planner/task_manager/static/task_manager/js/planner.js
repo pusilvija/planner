@@ -7,6 +7,7 @@ class TaskManager {
         this.taskDescription = document.getElementById('task-description');
         this.taskCategory = document.getElementById('task-category');
         this.addTaskButton = document.getElementById('add-task');
+//        this.editTaskNameButton = document.getElementById('edit-task-name');
 
         this.taskHeight = this.tasks[0].offsetHeight;
         this.spaceBetweenTasks = 20;
@@ -28,7 +29,17 @@ class TaskManager {
             this.addTaskButton.addEventListener('click', () => {
                 window.location.href = "{% url 'task_manager:add' %}" });
         }
-    }
+
+//        if (this.editTaskNameButton) {
+//            this.editTaskNameButton.addEventListener('click', () => {
+//                editTaskName();
+//        }
+//    }
+//
+//    editTaskName(taskId) {
+//        var taskId = this.editTaskNameButton.getAttribute('data-task-id');
+
+        }
 
     setInitialTaskSpacing() {
         this.tasks.forEach((task, index) => {

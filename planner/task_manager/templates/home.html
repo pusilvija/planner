@@ -14,34 +14,40 @@
 <body>
     <h1 class="page-title">Planner</h1>
 
-        <!-- Task container -->
+    <!-- Task container -->
     <div class="task-container" id="task-container">
         <a href="add/" id="add-task">+</a>
         {% for task in tasks %}
-            <div class="task" id="{{ task.id }}"
+            <div class="task" id="task-{{ task.id }}"
                  data-id="{{ task.id }}"
                  data-name="{{ task.name }}"
                  data-description="{{ task.description|default:'No description' }}"
                  data-status="{{ task.status }}"
                  data-category="{{ task.category }}"
-                 data-order=" {{ task.order }} "
+                 data-order="{{ task.order }}"
                  style="top: {{ forloop.counter0|add:"90" }}px;">
-                 <span class="task-name">{{ task.name }}</span>
-                    <!-- Buttons for Edit and Delete -->
+
+                <!-- Task Name (displayed by default) -->
+                <span class="task-name" id="task-name-{{ task.id }}">{{ task.name }}</span>
+
+                <!-- Task Name Edit (hidden by default) -->
+                <input type="text" class="edit-input" id="edit-input-{{ task.id }}" value="{{ task.name }}" style="display:none;">
+
+                <!-- Buttons for Edit and Delete -->
                 <div class="task-buttons">
-                        <a href="{% url 'delete_task' task.id %}"
-                           class="delete-task"
-                           onclick="return confirm('Are you sure you want to delete this task?')">
-                           <img src="{% static 'task_manager/images/trash-icon.png' %}" alt="Delete" class="delete-image">
-                        </a>
+                    <a href="{% url 'edit_task_name' task.id %}" id="edit-task-name" data-task-id="{{ task.id }}">
+                        <img src="{% static 'task_manager/images/edit-icon.png' %}" alt="Edit">
+                    </a>
+                    <a href="{% url 'delete_task' task.id %}" id="delete-task" onclick="return confirm('Are you sure you want to delete this task?')">
+                        <img src="{% static 'task_manager/images/trash-icon.png' %}" alt="Delete">
+                    </a>
                 </div>
-
             </div>
-
         {% endfor %}
     </div>
 
     <script src="{% static 'task_manager/js/planner.js' %}"></script>
 
-  </body>
+
+</body>
 </html>

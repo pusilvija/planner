@@ -116,24 +116,47 @@
     flex-grow: 1; /* Push the delete button to the right */
 }
 
-.delete-task {
+/* General button styles */
+.task-buttons {
     text-decoration: none;
     font-size: 18px;
+    margin: none;
     padding: 5px 8px;
     border-radius: 5px;
     cursor: pointer;
-    color: #ff4d4d; /* Red color for delete button */
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out; /* Added background-color transition */
 }
 
-.delete-task:hover {
-    transform: scale(1.1);
+.task-buttons a {
+    display: inline-block; /* Ensures buttons align correctly */
 }
 
-.delete-task img {
+/* Hover effect for individual buttons */
+.delete-task:hover, .edit-task-name:hover {
+    transform: scale(1.1); /* Slightly bigger on hover */
+    border-radius: 5px; /* Retain rounded corners on hover */
+}
+
+/* Image styling for buttons */
+#delete-task img {
     width: 24px; /* Adjust image size */
     height: 24px;
     transition: transform 0.2s ease-in-out;
+}
+
+#edit-task-name img {
+    width: 24px; /* Adjust image size */
+    height: 24px;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect for images inside buttons */
+#delete-task:hover img {
+    transform: scale(1.2); /* Slightly increase image size on hover */
+}
+
+#edit-task-name:hover img {
+    transform: scale(1.2); /* Make the edit image bigger on hover */
 }
 
 /* Input Fields */
