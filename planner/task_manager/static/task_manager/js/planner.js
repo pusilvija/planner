@@ -22,14 +22,61 @@ class TaskManager {
         this.tasks.forEach(task => {
             this.initializeTaskDragging(task);
             this.setupTaskClickHandler(task);
+            this.setupEditClickHandler(task);
+
         });
 
         if (this.addTaskButton) {
             this.addTaskButton.addEventListener('click', () => {
                 window.location.href = "{% url 'task_manager:add' %}" });
         }
+
+        if (this.editTaskNameButton) {
+            this.editTaskNameButton.addEventListener('click', () => {
+                this.editTaskNameButton();
+            });
+        }
     }
 
+    setupEditClickHandler(task) {
+        const editTaskNameButton = task.querySelector('#edit-task-name'); // Select the edit button for the task
+        const taskNameElement = task.querySelector('.task-name'); // Select the task name element
+        const editInputElement = task.querySelector('.edit-input'); // Select the input field for editing
+    
+        if (editTaskNameButton && taskNameElement && editInputElement) {
+            editTaskNameButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent the default behavior of the <a> tag
+    
+                // Show the input field and hide the task name
+                taskNameElement.style.display = 'none';
+                editInputElement.style.display = 'block';
+                editInputElement.focus(); 
+
+                // Move the cursor to the end of the input field
+                const value = editInputElement.value;
+                editInputElement.value = ''; // Temporarily clear the value
+                editInputElement.value = value; // Restore the value to move the cursor to the end
+
+            });
+
+            editInputElement.addEventListener('blur', () => {
+                const newName = editInputElement.value.trim();
+                if (newName) {
+                    taskNameElement.textContent = newName; // Update the task name
+                    this.editTaskName(task.dataset.id, newName); // Save the new title to the server
+                }
+                editInputElement.style.display = 'none'; // Hide the input field
+                taskNameElement.style.display = 'block'; // Show the updated task name
+            });
+
+            editInputElement.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    editInputElement.blur(); // Trigger the blur event to save changes
+                }
+            });
+        }
+    }
+    
     setInitialTaskSpacing() {
         this.tasks.forEach((task, index) => {
             task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
@@ -118,20 +165,58 @@ class TaskManager {
         });
     }
 
+    editTaskName(taskId, newName) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    
+        // Create the URL for the request dynamically using the taskId
+        const url = `/edit_task_name/${taskId}/`;
+    
+        // Send the POST request to the URL
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({
+                new_task_name: newName, // Send the new title to the server
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Title updated successfully');
+                } else {
+                    console.error('Error:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
     setupTaskClickHandler(task) {
         let wasDragging = false;
-
+    
         task.addEventListener('mousedown', () => wasDragging = false);
         task.addEventListener('mousemove', () => wasDragging = true);
-
-        task.addEventListener('click', () => {
-            if (!wasDragging) {
+    
+        task.addEventListener('click', (event) => {
+            // Ensure the click is not from a button or input field
+            if (!wasDragging && !event.target.closest('.task-buttons') && !event.target.closest('input')) {
                 const taskId = task.id; // Fetch the task ID
                 window.location.href = `/task/${taskId}/`; // Redirect to the correct task detail URL
             }
             wasDragging = false;
         });
-
+    
+        // Prevent clicks on buttons or inputs from propagating to the task
+        const buttons = task.querySelectorAll('.task-buttons button, .task-buttons a');
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation(); // Stop the click from propagating to the task
+            });
+        });
     }
 
 }
