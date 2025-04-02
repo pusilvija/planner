@@ -18,14 +18,13 @@
     <div class="task-container" id="task-container">
         <a href="add/" id="add-task">+</a>
         {% for task in tasks %}
-            <div class="task" id="task-{{ task.id }}"
+            <div class="task" id="{{ task.id }}"
                  data-id="{{ task.id }}"
                  data-name="{{ task.name }}"
                  data-description="{{ task.description|default:'No description' }}"
                  data-status="{{ task.status }}"
                  data-category="{{ task.category }}"
-                 data-order="{{ task.order }}"
-                 style="top: {{ forloop.counter0|add:"90" }}px;">
+                 data-order="{{ task.order }}">
 
                 <!-- Task Name (displayed by default) -->
                 <span class="task-name" id="task-name-{{ task.id }}">{{ task.name }}</span>
