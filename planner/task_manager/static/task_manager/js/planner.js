@@ -51,6 +51,12 @@ class TaskManager {
                 taskNameElement.style.display = 'none';
                 editInputElement.style.display = 'block';
                 editInputElement.focus(); 
+
+                // Move the cursor to the end of the input field
+                const value = editInputElement.value;
+                editInputElement.value = ''; // Temporarily clear the value
+                editInputElement.value = value; // Restore the value to move the cursor to the end
+
             });
 
             editInputElement.addEventListener('blur', () => {
