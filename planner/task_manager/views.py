@@ -56,19 +56,6 @@ def delete_task(request, task_id):
     return redirect('home')
 
 
-def edit_task_name(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)  # Get the task by its ID
-
-    if request.method == "POST":
-        new_name = request.POST.get('task_name')  # Get the new task name from the POST request
-        task.name = new_name  # Update the task name
-        task.save()  # Save the task with the new name
-        return JsonResponse({'status': 'success', 'new_name': task.name})
-
-    return redirect('home')
-
-
-
 def task_details(request, task_id):
     task = Task.objects.get(pk=task_id)  # Fetch the task by ID
     context = {'task': task}
@@ -89,6 +76,53 @@ def update_task(request, task_id):
 
     context = {'task': task}
     return render(request, 'task_details.html', context)
+
+
+@require_POST
+def edit_task_name(request, task_id):
+    try:
+        # Fetch the task by its ID
+        task = get_object_or_404(Task, pk=task_id)
+
+        # Parse the incoming JSON data from the request body
+        data = json.loads(request.body.decode('utf-8'))
+
+        # Extract the new title from the JSON data
+        new_name = data.get('new_task_name')
+
+        if not new_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'No new title provided'
+            }, status=400)
+
+        # Update the task name
+        task.name = new_name
+        task.save()
+
+        # Return a JSON response indicating success
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Task name updated successfully'
+        })
+
+    except Task.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Task not found'
+        }, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid JSON data'
+        }, status=400)
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
 
 
 @require_POST  # Ensure only POST requests are accepted
