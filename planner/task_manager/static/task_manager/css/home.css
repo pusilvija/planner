@@ -55,11 +55,6 @@
     left: 5%;                /* Optional: Keep it aligned with the left side during drag */
 }
 
-/* Add hover effect for better interaction */
-.task:hover {
-    transform: scale(1.02); /* Subtle zoom effect */
-    background-color: #b0d3e3; /* Slightly darker shade on hover */
-}
 
 /* Add task button */
 #add-task {
@@ -116,24 +111,100 @@
     flex-grow: 1; /* Push the delete button to the right */
 }
 
-.delete-task {
+/* General button styles */
+.task-buttons {
+    display: flex;
+    gap: 10px;
     text-decoration: none;
     font-size: 18px;
+    margin: none;
     padding: 5px 8px;
     border-radius: 5px;
     cursor: pointer;
-    color: #ff4d4d; /* Red color for delete button */
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out; /* Added background-color transition */
 }
 
-.delete-task:hover {
-    transform: scale(1.1);
+.task-buttons a {
+    display: inline-block; /* Ensures buttons align correctly */
 }
 
-.delete-task img {
+/* Hover effect for individual buttons */
+.delete-task:hover, .edit-task-name:hover {
+    transform: scale(1.1); /* Slightly bigger on hover */
+    border-radius: 5px; /* Retain rounded corners on hover */
+}
+
+/* Image styling for buttons */
+#delete-task img {
     width: 24px; /* Adjust image size */
     height: 24px;
     transition: transform 0.2s ease-in-out;
+}
+
+#edit-task-name img {
+    width: 24px; /* Adjust image size */
+    height: 24px;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect for images inside buttons */
+#delete-task:hover img {
+    transform: scale(1.2); /* Slightly increase image size on hover */
+}
+
+#edit-task-name:hover img {
+    transform: scale(1.2); /* Make the edit image bigger on hover */
+}
+
+/* Task Name and Edit Input Styles */
+.task-name,
+.edit-input {
+    flex-grow: 1; /* Ensure it takes up available space */
+    width: auto; /* Match the width of the task */
+    height: 65px; /* Match the height of the task */
+    padding: 15px; /* Match the task padding */
+    font-size: 1.2em; /* Match the task font size */
+    font-weight: bold; /* Match the task font weight */
+    color: #003366; /* Match the task text color */
+    background-color: #c4dce7; /* Match the task background color */
+    box-sizing: border-box; /* Include padding and border in width/height */
+    display: block; /* Ensure it behaves like a block element */
+    text-align: left; /* Align text to the left */
+    margin-top: 10px; /* Add spacing between elements */
+}
+
+/* Combined hover effect for task and task-name */
+.task:hover,
+.task:hover .task-name,
+.task-name:hover,
+.task-name:hover .task 
+.edit-input{
+    cursor: pointer;
+    background-color: #c4dce7; /* Slightly darker shade on hover */
+    transform: scale(1.02); /* Subtle zoom effect */
+}
+
+.task:hover {
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow on hover */
+}
+
+/* Hide the input by default */
+.edit-input {
+    background-color: #c4dce7;
+    border: none;
+}
+
+/* Show the input when editing */
+.edit-input.editing {
+    visibility: visible; /* Make the input visible */
+    opacity: 1; /* Fully opaque */
+}
+
+/* Add hover effect for the edit input (optional) */
+.edit-input:focus {
+    outline: none; /* Remove default focus outline */
+    border: none;
+    background-color: #c4dce7; /* Slightly lighter background on focus */
 }
 
 /* Input Fields */

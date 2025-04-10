@@ -42,7 +42,7 @@ def add_task(request):
 
 
 def delete_task(request, task_id):
-    task = Task.objects.get(pk=task_id)  # Fetch the task to be deleted
+    task = get_object_or_404(Task, pk=task_id)
     task_order = task.order  # Save the order of the task being deleted
     task.delete()  # Delete the task
 
@@ -57,25 +57,69 @@ def delete_task(request, task_id):
 
 
 def task_details(request, task_id):
-    task = Task.objects.get(pk=task_id)  # Fetch the task by ID
+    task = get_object_or_404(Task, pk=task_id)
     context = {'task': task}
     return render(request, 'task_details.html', context)
 
 
 def update_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
-
     if request.method == "POST":
-        # Directly update the task using the form
-        task.name = request.POST.get('name')
-        task.status = request.POST.get('status')
-        task.category = request.POST.get('category')
-        task.description = request.POST.get('description')
-        task.save()  # Save the updated task to the database
-        return redirect('task_details', task_id=task.id)  # Redirect to task details page after update
-
-    context = {'task': task}
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect('task_details', task_id=task.id)
+    else:
+        form = TaskForm(instance=task)
+    context = {'form': form, 'task': task}
     return render(request, 'task_details.html', context)
+
+
+@require_POST
+def edit_task_name(request, task_id):
+    try:
+        # Fetch the task by its ID
+        task = get_object_or_404(Task, pk=task_id)
+
+        # Parse the incoming JSON data from the request body
+        data = json.loads(request.body.decode('utf-8'))
+
+        # Extract the new title from the JSON data
+        new_name = data.get('new_task_name')
+
+        if not new_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'No new title provided. Please provide a valid title.'
+            }, status=400)
+
+        # Update the task name
+        task.name = new_name
+        task.save()
+
+        # Return a JSON response indicating success
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Task name updated successfully'
+        })
+
+    except Task.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Task not found'
+        }, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid JSON data'
+        }, status=400)
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
 
 
 @require_POST  # Ensure only POST requests are accepted
