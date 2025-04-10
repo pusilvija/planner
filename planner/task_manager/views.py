@@ -6,12 +6,19 @@ from .forms import TaskForm
 from .models import Task
 import json
 from django.views.decorators.http import require_POST
+from collections import defaultdict
 
 
 def home(request):
-    context = {
-               'tasks': Task.objects.all().order_by('order'),
-               }
+    tasks = Task.objects.all()
+    grouped_tasks = defaultdict(list)
+    for task in tasks:
+        grouped_tasks[task.status].append(task)
+
+    grouped_tasks = dict(grouped_tasks)
+    
+    context = {'grouped_tasks': grouped_tasks}
+
     return render(request, 'home.html', context)
 
 
@@ -122,27 +129,96 @@ def edit_task_name(request, task_id):
         }, status=500)
 
 
+# @require_POST  # Ensure only POST requests are accepted
+# def update_task_order(request, task_id):
+#     try:
+#         # Parse the incoming JSON data from the request body
+#         data = json.loads(request.body.decode('utf-8'))
+
+#         # Extract the new order from the JSON data
+#         new_order = data.get('new_order')
+
+#         if new_order is None:
+#             return JsonResponse({
+#                 'status': 'error',
+#                 'message': 'No new order provided'
+#             }, status=400)
+
+#         # Fetch the task by its ID
+#         task = Task.objects.get(id=task_id)
+
+#         # Update the order (assuming there's an order field in the Task model)
+#         task.order = new_order
+#         task.save()
+
+#         # Return a JSON response indicating success
+#         return JsonResponse({
+#             'status': 'success',
+#             'message': 'Order updated successfully'
+#         })
+
+#     except Task.DoesNotExist:
+#         return JsonResponse({
+#             'status': 'error',
+#             'message': 'Task not found'
+#         }, status=404)
+
+#     except json.JSONDecodeError:
+#         return JsonResponse({
+#             'status': 'error',
+#             'message': 'Invalid JSON data'
+#         }, status=400)
+
+#     except Exception as e:
+#         return JsonResponse({
+#             'status': 'error',
+#             'message': str(e)
+#         }, status=500)
+
+
 @require_POST  # Ensure only POST requests are accepted
 def update_task_order(request, task_id):
     try:
         # Parse the incoming JSON data from the request body
         data = json.loads(request.body.decode('utf-8'))
 
-        # Extract the new order from the JSON data
+        # Extract the new order and status from the JSON data
         new_order = data.get('new_order')
+        new_status = data.get('new_status')
 
-        if new_order is None:
+        if new_order is None or new_status is None:
             return JsonResponse({
                 'status': 'error',
-                'message': 'No new order provided'
+                'message': 'New order or status not provided'
             }, status=400)
 
         # Fetch the task by its ID
         task = Task.objects.get(id=task_id)
 
-        # Update the order (assuming there's an order field in the Task model)
-        task.order = new_order
-        task.save()
+        # If the task's status is changing, update the status and reorder tasks in both statuses
+        if task.status != new_status:
+            # Shift the order of tasks in the old status
+            Task.objects.filter(status=task.status, order__gt=task.order).update(order=F('order') - 1)
+
+            # Update the task's status and set its new order
+            task.status = new_status
+            task.order = new_order
+            task.save()
+
+            # Shift the order of tasks in the new status to make space for the moved task
+            Task.objects.filter(status=new_status, order__gte=new_order).exclude(id=task.id).update(order=F('order') + 1)
+        else:
+            # If the status is not changing, reorder tasks within the same status
+            if task.order < new_order:
+                # If the task is moving down, shift tasks up
+                Task.objects.filter(status=task.status, order__gt=task.order, order__lte=new_order).exclude(id=task.id).update(order=F('order') - 1)
+            elif task.order > new_order:
+                # If the task is moving up, shift tasks down
+                Task.objects.filter(status=task.status, order__lt=task.order, order__gte=new_order).exclude(id=task.id).update(order=F('order') + 1)
+
+            # Update the task's order
+            task.order = new_order
+            task.save()
 
         # Return a JSON response indicating success
         return JsonResponse({

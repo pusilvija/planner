@@ -1,23 +1,37 @@
 @import "base.css";
 
+
+.task-container-wrapper {
+    display: flex; /* Use flexbox to align child containers horizontally */
+    gap: 20px; /* Add space between the containers */
+    flex-wrap: wrap; /* Allow wrapping to the next line if there's not enough space */
+    /* padding-left: 20px; */
+    scroll-behavior: smooth; 
+    position: relative;
+}
+
 .task-container {
-    width: 500px;
+    min-width: 300px;
+    max-width: 400px;
     background-color: #e9f4f9;
     opacity: 0.7;
     border: 2px solid #e9ecf9;
     border-radius: 8px;
     padding: 10px;
-    position: absolute;
     top: 250px;
     left: 50%;
     transform: translateX(-50%);
-    min-height: 100px;
+    min-height: 400px;
     overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
+    flex: 0 0 auto;
     justify-content: flex-start;
     align-items: center;
     margin-top: 150px;
+    pointer-events: auto; /* Ensure the container can receive mouse events */
+    /* display: block; Ensure the container is rendered */
+    visibility: visible; 
+    
+    /* position: relative; */
 }
 
 /* Task Styles */
@@ -27,7 +41,7 @@
     border: 2px solid #e9ecf9;
     border-radius: 12px; /* Softer corners */
     padding: 15px;
-    cursor: pointer;
+    cursor: grab;
     position: absolute;
     left: 5%;
     top: -30px;
@@ -45,14 +59,19 @@
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
     margin-top: 50px;
     color: #003366;
+    transition: none;
+    /* position: relative; */
 }
 
 /* Style for the dragging task */
 .task.dragging {
     opacity: 0.3;            /* Makes the task transparent */
-    position: absolute;      /* Position it absolutely while dragging */
+    /* position: absolute;      Position it absolutely while dragging */
     z-index: 10;             /* Ensure it's always on top of other tasks */
     left: 5%;                /* Optional: Keep it aligned with the left side during drag */
+    pointer-events: none;
+    /* cursor: grabbing; */
+    z-index: 10;
 }
 
 

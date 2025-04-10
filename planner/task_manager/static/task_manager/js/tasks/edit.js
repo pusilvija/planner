@@ -27,7 +27,5 @@ export function setupEditClickHandler(task, manager) {
         editInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') editInput.blur();
         });
-    } else {
-        console.warn('Required elements for editing task name are missing.');
     }
 }

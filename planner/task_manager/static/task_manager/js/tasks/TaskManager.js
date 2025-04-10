@@ -6,8 +6,9 @@ import { updateTaskOrder, editTaskName } from './api.js';
 
 export class TaskManager {
     constructor() {
-        this.tasks = Array.from(document.querySelectorAll('.task'));
-        this.taskContainer = document.getElementById('task-container');
+        this.taskContainers = Array.from(document.querySelectorAll('.task-container')); 
+        this.tasks = Array.from(document.querySelectorAll('.task')); 
+        // this.taskContainer = document.getElementById('task-container');
         this.taskTitle = document.getElementById('task-title');
         this.taskStatus = document.getElementById('task-status');
         this.taskDescription = document.getElementById('task-description');
@@ -18,17 +19,23 @@ export class TaskManager {
         this.dragZoneHeight = this.taskHeight + this.spaceBetweenTasks;
         this.isDragging = false;
 
+        // console.log('TaskManager initialized ', 'taskContainer:', this.taskContainer)
         this.initialize();
     }
 
     initialize() {
-        setInitialTaskSpacing(this.tasks, this.taskContainer, this.dragZoneHeight, this.spaceBetweenTasks);
+        this.taskContainers.forEach(container => {
+            console.log('Container: ', container)
+            const tasksInContainer = Array.from(container.querySelectorAll('.task'));
+            setInitialTaskSpacing(tasksInContainer, container, this.dragZoneHeight, this.spaceBetweenTasks);
 
-        this.tasks.forEach(task => {
-            initializeTaskDragging(task, this);
-            setupEditClickHandler(task, this);
-            setupTaskClickHandler(task);
+            tasksInContainer.forEach(task => {
+                initializeTaskDragging(task, container, this);
+                setupEditClickHandler(task, this);
+                setupTaskClickHandler(task);
+            });
         });
+
 
         if (this.addTaskButton) {
             this.addTaskButton.addEventListener('click', () => {
@@ -37,14 +44,24 @@ export class TaskManager {
         }
     }
 
-    reorderTasks() {
-        const taskPositions = this.tasks
-            .map(t => ({ task: t, top: t.offsetTop }))
-            .sort((a, b) => a.top - b.top);
-
-        taskPositions.forEach((item, index) => {
-            item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
-            updateTaskOrder(item.task.id, index);
+    reorderTasks(container = null) {
+        // If a specific container is provided, reorder tasks only in that container
+        const containersToReorder = container ? [container] : this.taskContainers;
+    
+        containersToReorder.forEach(container => {
+            const tasksInContainer = Array.from(container.querySelectorAll('.task'));
+            const status = container.dataset.status; // Get the status from the container's data-status attribute
+    
+            // Sort tasks by their vertical position (offsetTop)
+            const taskPositions = tasksInContainer
+                .map(task => ({ task, top: task.offsetTop }))
+                .sort((a, b) => a.top - b.top);
+    
+            // Reassign order and update the backend
+            taskPositions.forEach((item, index) => {
+                item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
+                updateTaskOrder(item.task.dataset.id, index, status); // Pass the status to the API
+            });
         });
     }
 

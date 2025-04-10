@@ -1,5 +1,7 @@
-export function updateTaskOrder(taskId, newOrder) {
+export function updateTaskOrder(taskId, newOrder, newStatus) {
     const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    console.log('Updating task order:', { taskId, newOrder, newStatus });
 
     fetch(`/update-task-order/${taskId}/`, {
         method: 'POST',
@@ -7,7 +9,10 @@ export function updateTaskOrder(taskId, newOrder) {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrf,
         },
-        body: JSON.stringify({ new_order: newOrder }),
+        body: JSON.stringify({
+            new_order: newOrder,
+            new_status: newStatus
+         }),
     })
     .then(res => res.json())
     .then(data => {
