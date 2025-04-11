@@ -1,7 +1,13 @@
 export function updateTaskOrder(taskId, newOrder, newStatus) {
     const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
-    // console.log('Updating task order:', { taskId, newOrder, newStatus });
+    // Get the task element by its ID (assuming each task has a unique ID)
+    const taskElement = document.querySelector(`[data-id="${taskId}"]`);
+
+    // Retrieve the task name (assuming the name is stored in the 'data-name' attribute)
+    const taskName = taskElement ? taskElement.dataset.name : 'Unknown Task';
+
+    console.log('Updating task order:', { taskId, taskName, newOrder, newStatus });
 
     fetch(`/update-task-order/${taskId}/`, {
         method: 'POST',

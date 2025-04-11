@@ -51,6 +51,13 @@ export class TaskManager {
         containersToReorder.forEach(container => {
             const tasksInContainer = Array.from(container.querySelectorAll('.task'));
             const status = container.dataset.status; // Get the status from the container's data-status attribute
+
+            console.log(
+                "Tasks in", 
+                container.dataset.status, 
+                ":", 
+                Array.from(container.querySelectorAll('.task')).map(t => `${t.dataset.name}(${t.dataset.order})`)
+            );
     
             // Sort tasks by their vertical position (offsetTop)
             const taskPositions = tasksInContainer
@@ -59,6 +66,7 @@ export class TaskManager {
     
             // Reassign order and update the backend
             taskPositions.forEach((item, index) => {
+                console.log("Item: ", item.task.dataset.name, " -> ", index);
                 item.task.style.top = `${index * this.dragZoneHeight + this.spaceBetweenTasks}px`;
                 updateTaskOrder(item.task.dataset.id, index, status); // Pass the status to the API
             });

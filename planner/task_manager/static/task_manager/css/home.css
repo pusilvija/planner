@@ -28,11 +28,7 @@
     align-items: center;
     margin-top: 150px;
     pointer-events: auto; /* Ensure the container can receive mouse events */
-    /* display: block; Ensure the container is rendered */
     visibility: visible; 
-    /* position: relative; */
-    /* width: 100%;  /* Ensure the container has a defined width */
-    /* height: 100%;  */ */
 }
 
 /* Task Styles */
@@ -67,7 +63,7 @@
 /* Style for the dragging task */
 .task.dragging {
     opacity: 0.3;            /* Makes the task transparent */
-    /* position: absolute;      Position it absolutely while dragging */
+    position: absolute;      /* Position it absolutely while dragging
     z-index: 10;             /* Ensure it's always on top of other tasks */
     left: 5%;                /* Optional: Keep it aligned with the left side during drag */
     pointer-events: none;
