@@ -25,7 +25,7 @@ export class TaskManager {
 
     initialize() {
         this.taskContainers.forEach(container => {
-            console.log('Container: ', container)
+            // console.log('Container: ', container)
             const tasksInContainer = Array.from(container.querySelectorAll('.task'));
             setInitialTaskSpacing(tasksInContainer, container, this.dragZoneHeight, this.spaceBetweenTasks);
 

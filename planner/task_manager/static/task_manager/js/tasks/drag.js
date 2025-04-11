@@ -14,7 +14,7 @@ function startDragging(task, e, container, manager) {
     const offsetX = e.clientX - task.left;
     const offsetY = e.clientY - task.top; 
 
-    console.log('OffsetX:', offsetX, 'OffsetY:', offsetY); // Debugging offsets
+    // console.log('OffsetX:', offsetX, 'OffsetY:', offsetY); // Debugging offsets
 
 
     const onMouseMove = (e) => {
@@ -32,7 +32,9 @@ function startDragging(task, e, container, manager) {
 
         if (manager.isDragging) {
             const finalContainer = getContainerUnderMouse(e) 
-            const current_container = finalContainer === container ? container : finalContainer;
+            const current_container = finalContainer.dataset.status === container.dataset.status ? container : finalContainer;
+            console.log(">>> Container status change: ", task.dataset.name.toUpperCase(), "  ",  container.dataset.status, " -> ", current_container.dataset.status)
+            // console.log("current_container: ", current_container.dataset.status, current_container)
             updateDraggedTaskPosition(task, e, offsetX, offsetY, current_container);
         }
     };
@@ -62,8 +64,19 @@ function updateDraggedTaskPosition(task, e, offsetX, offsetY, container) {
         task.style.left = `${new_left}px`;
         task.style.top = `${new_top}px`;
 
-        console.log('left:', task.style.left )
-        console.log('top:', task.style.top) 
+        const prev_task_status = task.dataset.status
+        const prev_task_container = task.dataset.container
+
+
+        task.dataset.status = container.dataset.status; // Update the status in the task's dataset
+        task.dataset.container = container.dataset.status; // Update the container in the task's dataset
+
+        // console.log(">>>", task.dataset.name)
+        console.log(">>> task_status: ",  prev_task_status, " -> " ,task.dataset.status)
+        console.log(">>> task_container: ",  prev_task_container, " -> " , task.dataset.container)
+
+        // console.log('left:', task.style.left )
+        // console.log('top:', task.style.top) 
 
         // Optional: Add visual container detection here if needed
     });
@@ -78,18 +91,23 @@ function stopDragging(task, e, onMouseMove, onMouseUp, manager, container) {
     manager.isDragging = false;
 
     // Determine the final container
-    const finalContainer = getContainerUnderMouse(e) 
-    if (finalContainer != container) {
-        finalContainer.appendChild(task); // Move the task to the new container
+    const finalContainer = getContainerUnderMouse(e);
 
-        manager.reorderTasks(finalContainer);    
-        manager.reorderTasks(container);
-    }
-    else {
-        manager.reorderTasks(finalContainer);  
-        manager.reorderTasks(container);
-    }
+    // if (finalContainer && finalContainer.dataset.status !== container.dataset.status) {
+    //     finalContainer.appendChild(task); // Move the task to the new container
+    // }
+    finalContainer.appendChild(task)
 
+    // 🔄 Reorder tasks in ALL containers
+    document.querySelectorAll('.task-container').forEach((c) => {
+        manager.reorderTasks(c);
+        console.log(
+            "Tasks in", 
+            c.dataset.status, 
+            ":", 
+            Array.from(c.querySelectorAll('.task')).map(t => t.textContent.trim())
+        );
+    });
 }
 
 
