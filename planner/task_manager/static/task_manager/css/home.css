@@ -84,7 +84,7 @@
     text-align: center; /* Center the text */
     transition: transform 0.2s ease-in-out; /* Smooth hover effect */
     position: relative;
-    margin-top: -60px; /* Space above the button */
+    margin-top: -59px; /* Space above the button */
     z-index: 2; /* Ensure it appears above other elements */
     margin-right: 10px;
 }
