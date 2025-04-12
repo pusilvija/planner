@@ -4,7 +4,12 @@ export function setupEditClickHandler(task, manager) {
     const editInput = task.querySelector('.edit-input');
 
     if (editBtn && taskName && editInput) {
+        editBtn.addEventListener('mousedown', (e) => {
+            e.stopPropagation(); 
+            // Optionally: e.preventDefault(); 
+        });
         editBtn.addEventListener('click', (e) => {
+            manager.isEditing = true;
             e.preventDefault();
             taskName.style.display = 'none';
             editInput.style.display = 'block';

@@ -1,6 +1,7 @@
 import { setInitialTaskSpacing } from './utils.js';
 import { initializeTaskDragging } from './drag.js';
 import { setupEditClickHandler } from './edit.js';
+import { setupDeleteClickHandler } from './delete.js';
 import { setupTaskClickHandler } from './events.js';
 import { updateTaskOrder, editTaskName } from './api.js';
 
@@ -18,6 +19,7 @@ export class TaskManager {
         this.spaceBetweenTasks = 20;
         this.dragZoneHeight = this.taskHeight + this.spaceBetweenTasks;
         this.isDragging = false;
+        this.isEditing = false;
 
         // console.log('TaskManager initialized ', 'taskContainer:', this.taskContainer)
         this.initialize();
@@ -33,6 +35,7 @@ export class TaskManager {
                 initializeTaskDragging(task, container, this);
                 setupEditClickHandler(task, this);
                 setupTaskClickHandler(task);
+                setupDeleteClickHandler(task);
             });
         });
 

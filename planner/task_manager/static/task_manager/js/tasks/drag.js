@@ -3,7 +3,6 @@ export function initializeTaskDragging(task, container, manager) {
 }
 
 function startDragging(task, e, container, manager) {
-    console.log("START DRAGGING")
     manager.isDragging = false;
 
     // Initial mouse position
@@ -15,6 +14,7 @@ function startDragging(task, e, container, manager) {
     const offsetY = e.clientY - task.offsetTop;
 
     const onMouseMove = (e) => {
+        console.log("onMouseMove: DRAGGING")
         // Measures how far mouse moved
         const deltaX = Math.abs(e.clientX - startX);
         const deltaY = Math.abs(e.clientY - startY);
@@ -48,7 +48,6 @@ function startDragging(task, e, container, manager) {
 }
 
 function updateDraggedTaskPosition(task, e, offsetX, offsetY, container) {
-    console.log("START DRAGGING: updateDraggedTaskPosition")
     requestAnimationFrame(() => {
         if (!container) {
             console.error('Container is null. Skipping position update.');
@@ -88,13 +87,10 @@ function updateDraggedTaskPosition(task, e, offsetX, offsetY, container) {
             }
         }
 
-        console.log(">>> task_status: ", prev_task_status, " -> ", task.dataset.status);
-        console.log(">>> task_container: ", prev_task_container, " -> ", task.dataset.container);
     });
 }
 
 function stopDragging(task, e, onMouseMove, onMouseUp, manager, container) {
-    console.log("START DRAGGING: stopDragging")
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
     task.classList.remove('dragging');
