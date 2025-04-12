@@ -17,16 +17,18 @@
     <div class="task-container-wrapper">
         {% for status, tasks in grouped_tasks.items %}
             <div class="task-container" id="task-container-{{ status|slugify }}" data-status="{{ status }}">
-                <h2>{{ status|title }}</h2>
+                
+                <h2 id="container-title">{{ status|title }}</h2>
                 <a href="add/" id="add-task">+</a>
+
                 {% for task in tasks %}
                     <div class="task" id="{{ task.id }}"
-                         data-id="{{ task.id }}"
-                         data-name="{{ task.name }}"
-                         data-description="{{ task.description|default:'No description' }}"
-                         data-status="{{ task.status }}"
-                         data-category="{{ task.category }}"
-                         data-order="{{ task.order }}">
+                        data-id="{{ task.id }}"
+                        data-name="{{ task.name }}"
+                        data-description="{{ task.description|default:'No description' }}"
+                        data-status="{{ task.status }}"
+                        data-category="{{ task.category }}"
+                        data-order="{{ task.order }}">
     
                         <!-- Task Name (displayed by default) -->
                         <span class="task-name" id="task-name-{{ task.id }}">{{ task.name }}</span>
@@ -45,6 +47,7 @@
                         </div>
                     </div>
                 {% endfor %}
+                <!-- </div> -->
             </div>
         {% endfor %}
     </div>
