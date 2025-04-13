@@ -9,7 +9,6 @@ export function setupEditClickHandler(task, manager) {
             // Optionally: e.preventDefault(); 
         });
         editBtn.addEventListener('click', (e) => {
-            manager.isEditing = true;
             e.preventDefault();
             taskName.style.display = 'none';
             editInput.style.display = 'block';

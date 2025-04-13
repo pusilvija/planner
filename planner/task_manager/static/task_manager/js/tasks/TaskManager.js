@@ -19,9 +19,7 @@ export class TaskManager {
         this.spaceBetweenTasks = 20;
         this.dragZoneHeight = this.taskHeight + this.spaceBetweenTasks;
         this.isDragging = false;
-        this.isEditing = false;
 
-        // console.log('TaskManager initialized ', 'taskContainer:', this.taskContainer)
         this.initialize();
     }
 
