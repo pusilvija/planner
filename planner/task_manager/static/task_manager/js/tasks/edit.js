@@ -4,6 +4,10 @@ export function setupEditClickHandler(task, manager) {
     const editInput = task.querySelector('.edit-input');
 
     if (editBtn && taskName && editInput) {
+        editBtn.addEventListener('mousedown', (e) => {
+            e.stopPropagation(); 
+            // Optionally: e.preventDefault(); 
+        });
         editBtn.addEventListener('click', (e) => {
             e.preventDefault();
             taskName.style.display = 'none';
@@ -27,7 +31,5 @@ export function setupEditClickHandler(task, manager) {
         editInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') editInput.blur();
         });
-    } else {
-        console.warn('Required elements for editing task name are missing.');
     }
 }

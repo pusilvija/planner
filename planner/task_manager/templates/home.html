@@ -14,36 +14,45 @@
 <body>
     <h1 class="page-title">Planner</h1>
 
-    <!-- Task container -->
-    <div class="task-container" id="task-container">
-        <a href="add/" id="add-task">+</a>
-        {% for task in tasks %}
-            <div class="task" id="{{ task.id }}"
-                 data-id="{{ task.id }}"
-                 data-name="{{ task.name }}"
-                 data-description="{{ task.description|default:'No description' }}"
-                 data-status="{{ task.status }}"
-                 data-category="{{ task.category }}"
-                 data-order="{{ task.order }}">
+    <div class="task-container-wrapper">
+        {% for status, tasks in grouped_tasks.items %}
+            <div class="task-container" id="task-container-{{ status|slugify }}" data-status="{{ status }}">
+                
+                <h2 id="container-title">{{ status|title }}</h2>
+                <a href="add/" id="add-task">+</a>
 
-                <!-- Task Name (displayed by default) -->
-                <span class="task-name" id="task-name-{{ task.id }}">{{ task.name }}</span>
-
-                <!-- Task Name Edit (hidden by default) -->
-                <input type="text" class="edit-input" id="edit-input-{{ task.id }}" value="{{ task.name }}" style="display:none;">
-
-                <!-- Buttons for Edit and Delete -->
-                <div class="task-buttons">
-                    <a href="{% url 'edit_task_name' task.id %}" id="edit-task-name" data-task-id="{{ task.id }}">
-                        <img src="{% static 'task_manager/images/edit-icon.png' %}" alt="Edit">
-                    </a>
-                    <a href="{% url 'delete_task' task.id %}" id="delete-task" onclick="return confirm('Are you sure you want to delete this task?')">
-                        <img src="{% static 'task_manager/images/trash-icon.png' %}" alt="Delete">
-                    </a>
-                </div>
+                {% for task in tasks %}
+                    <div class="task" id="{{ task.id }}"
+                        data-id="{{ task.id }}"
+                        data-name="{{ task.name }}"
+                        data-description="{{ task.description|default:'No description' }}"
+                        data-status="{{ task.status }}"
+                        data-category="{{ task.category }}"
+                        data-order="{{ task.order }}">
+    
+                        <!-- Task Name (displayed by default) -->
+                        <span class="task-name" id="task-name-{{ task.id }}">{{ task.name }}</span>
+    
+                        <!-- Task Name Edit (hidden by default) -->
+                        <input type="text" class="edit-input" id="edit-input-{{ task.id }}" value="{{ task.name }}" style="display:none;">
+    
+                        <!-- Buttons for Edit and Delete -->
+                        <div class="task-buttons">
+                            <a href="{% url 'edit_task_name' task.id %}" id="edit-task-name" data-task-id="{{ task.id }}">
+                                <img src="{% static 'task_manager/images/edit-icon.png' %}" alt="Edit">
+                            </a>
+                            <a href="{% url 'delete_task' task.id %}" id="delete-task" onclick="return confirm('Are you sure you want to delete this task?')">
+                                <img src="{% static 'task_manager/images/trash-icon.png' %}" alt="Delete">
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!-- </div> -->
             </div>
         {% endfor %}
     </div>
+    
+    <!-- <button id="add-container-btn">Add New Container</button> -->
 
     <script type="module" src="{% static 'task_manager/js/tasks/index.js' %}"></script>
 
